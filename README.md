@@ -1,9 +1,26 @@
-# Knowledge Agent
+# Code Agent Knowledge
 
-A Python CLI for sharing actionable coding-agent knowledge as reviewed Markdown
-in Git. No central database or Basic Memory deployment is required. This repository
-implements the [discussion spec](knowledge-agent-spec.md); see [the plan](PLAN.md)
-and [node/manifest schema](docs/schema.md).
+A structured knowledge graph for capturing and reusing project tribal knowledge
+from conversations with coding agents.
+
+Tribal knowledge includes the unwritten constraints, human corrections, failed
+approaches and validated discoveries that emerge while an engineer and a coding
+agent work together. This project turns the useful, actionable lessons from those
+conversations into durable knowledge that future agents and developers can reuse,
+reducing repeated investigations and mistakes.
+
+Knowledge is stored as reviewed Markdown nodes in Git, with structured metadata,
+evidence, code anchors and explicit relationships. Those relationships form a
+graph: decisions and pitfalls can link to shared constraints, and retrieval can
+follow those links in both directions to surface relevant connected knowledge.
+It is not a transcript archive or an automatically generated map of the codebase.
+The working agent selects qualifying knowledge from its conversation and task
+evidence; the tool validates, indexes, retrieves and prepares it for review.
+
+The current implementation is a Python CLI with a rebuildable local index. No
+central database or Basic Memory deployment is required. See the
+[discussion spec](knowledge-agent-spec.md), [implementation plan](PLAN.md) and
+[node/manifest schema](docs/schema.md).
 
 ## Install and try the complete local loop
 

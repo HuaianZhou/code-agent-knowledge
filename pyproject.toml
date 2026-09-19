@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "knowledge-agent"
+version = "0.1.0"
+description = "Git-backed, evidence-aware project knowledge for coding agents"
+requires-python = ">=3.11"
+dependencies = ["PyYAML>=6.0,<7", "sqlite-vec>=0.1.6,<0.2"]
+
+[project.optional-dependencies]
+semantic = ["sentence-transformers>=3,<6"]
+
+[project.scripts]
+knowledge-agent = "knowledge_agent.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["knowledge_agent*"]

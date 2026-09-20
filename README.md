@@ -136,7 +136,12 @@ knowledge-agent review knowledge/proposal-ID
 
 An empty manifest reports zero writes. Qualifying nodes require all admission gates
 with reasons and a recorded existing-knowledge search. Proposals are committed in
-separate worktrees under the client's state directory. Review refreshes the accepted
+separate worktrees under the client's state directory. Each supplied node also needs
+an explicit `create` or `update` entry in the manifest's `operations` map. Updates
+must reference an existing ID in the accepted snapshot; creates must use a new ID.
+Invalid operations fail before any proposal writes. Existing manifests need this
+field added. Search/read existing knowledge first to assess semantic overlap as well
+as ID existence. Review refreshes the accepted
 state and flags concurrent ID conflicts, integrity errors and duplicate candidates
 with both scopes visible. Similarity does not establish equivalence. Rerun review
 immediately before a serialized host-managed merge; a report is not authorization

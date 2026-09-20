@@ -68,7 +68,10 @@ class KnowledgeTest(unittest.TestCase):
             p = self.root / f"{n.id}.md"
             p.write_text(n.markdown(), encoding="utf-8")
             paths.append(str(p))
-        return propose(self.config, {"nodes": paths, "admission": [declaration(n.id) for n in nodes], "merges": merges or {}})
+        existing = snapshot(self.repo, accepted(self.config))[1]
+        return propose(self.config, {"nodes": paths, "admission": [declaration(n.id) for n in nodes],
+                                     "operations": {n.id: "update" if n.id in existing else "create" for n in nodes},
+                                     "merges": merges or {}})
 
     def test_bidirectional_graph_and_cycles(self):
         self.b.meta["relations"] = [{"type": "depends_on", "target": "A"}]
@@ -343,6 +346,44 @@ class KnowledgeTest(unittest.TestCase):
         with self.assertRaises(KnowledgeError):
             initialize(self.root / "config.json", target, str(self.repo))
         self.assertFalse(target.exists())
+
+    def test_proposal_rejects_missing_update_and_existing_create_before_writes(self):
+        for key, operation in [("missing", "update"), ("B", "create")]:
+            candidate = self.root / "candidate.md"
+            candidate.write_text(node(key).markdown(), encoding="utf-8")
+            manifest = {"nodes": [str(candidate)], "admission": [declaration(key)], "operations": {key: operation}}
+            branches = git(self.repo, "branch", "--list").stdout
+            with self.assertRaisesRegex(KnowledgeError, "cannot " + operation):
+                propose(self.config, manifest)
+            self.assertEqual(git(self.repo, "branch", "--list").stdout, branches)
+            self.assertFalse((Path(self.config["state"]) / "proposals").exists())
+            self.assertEqual(snapshot(self.repo, "main")[0], self.rev)
+
+    def test_proposal_requires_explicit_operation_for_every_supplied_node(self):
+        candidate = self.root / "candidate.md"
+        candidate.write_text(self.b.markdown(), encoding="utf-8")
+        for operations in ({}, {"B": "upsert"}, {"B": "update", "extra": "create"}):
+            with self.assertRaises(KnowledgeError):
+                propose(self.config, {"nodes": [str(candidate)], "admission": [declaration("B")], "operations": operations})
+        with self.assertRaises(KnowledgeError):
+            propose(self.config, {"nodes": [], "operations": {"B": "update"}})
+        self.assertFalse((Path(self.config["state"]) / "proposals").exists())
+
+    def test_explicit_update_preserves_existing_path_and_records_intent(self):
+        (self.repo / self.b.path).unlink()
+        self.b.path = "nodes/renamed-constraint.md"
+        self.save(self.b)
+        self.commit()
+        revised = copy.deepcopy(self.b)
+        revised.meta["title"] = "Updated constraint title"
+        report = self.proposal(revised)
+        _, nodes, _ = snapshot(self.repo, report["branch"])
+        self.assertEqual(set(nodes), {"A", "B", "C"})
+        self.assertEqual(nodes["B"].path, self.b.path)
+        self.assertEqual(nodes["B"].meta["title"], revised.meta["title"])
+        self.assertEqual(nodes["A"].meta["relations"][0]["target"], "B")
+        record = next((Path(report["worktree"]) / "reviews").glob("*.json"))
+        self.assertEqual(json.loads(record.read_text())["operations"], {"B": "update"})
 
 
 if __name__ == "__main__":

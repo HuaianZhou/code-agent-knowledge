@@ -15,6 +15,9 @@ constraint changes. `related_to` is exploratory, not invalidation propagation.
 Review external dependencies, configuration and deployment conditions even when
 anchors are unchanged. Age, low usage, weight or orphan status do not prove decay.
 
+Read the existing node before proposing a correction. Declare `update` for its
+stable ID in the manifest's `operations` map; do not create a replacement merely
+because an ID lookup fails. Resolve redirects to the survivor first.
 Prepare corrections through `propose`: refresh moved anchors after inspecting code,
 set uncertain claims to `needs_review`, revise scope, or preserve history with
 `superseded`/`archived`. A historical reason may remain correct after its condition

@@ -30,8 +30,12 @@ not title or tags alone. Prefer no-op, added evidence, or an update over paraphr
 Reuse stable IDs for shared constraints. Link causal/constraint edges only when
 evidence supports that meaning; preserve unresolved conflicts explicitly.
 
-Write Markdown nodes and a manifest containing gate rationales and the existing
-knowledge search. Distinguish human reports, inferences and verified results. Do
+Read the selected existing node before updating it, preserving its stable ID.
+Write Markdown nodes and a manifest containing gate rationales, the existing
+knowledge search, and an `operations` map assigning each supplied ID `create` or
+`update`. Update requires an existing ID in the accepted snapshot; create requires
+an unused ID. A failed update is not permission to create a replacement: resolve
+the intended ID or redirect first. Distinguish human reports, inferences and verified results. Do
 not fabricate anchors or promote a passing code change into deployment evidence.
 Run `task-end MANIFEST` to validate and prepare an isolated committed proposal;
 check `committed` and preserve the worktree on failure. Report the branch and

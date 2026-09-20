@@ -17,11 +17,15 @@ def propose(config, manifest, manifest_dir=None):
     paths = manifest.get("nodes", [])
     require(isinstance(paths, list) and all(isinstance(p, str) for p in paths), "nodes must list Markdown paths")
     decisions = admission(manifest.get("admission", []))
+    operations = manifest.get("operations", {})
+    require(isinstance(operations, dict) and all(isinstance(key, str) and value in ("create", "update")
+            for key, value in operations.items()), "operations must map node IDs to create or update")
     merges = manifest.get("merges", {})
     require(isinstance(merges, dict) and all(isinstance(k, str) and isinstance(v, str) for k, v in merges.items()),
             "merges must map retired IDs to surviving IDs")
     if not paths and not merges:
         require(not decisions, "admission decisions have no corresponding nodes")
+        require(not operations, "operations have no corresponding nodes")
         return {"outcome": "zero_qualifying_candidates", "writes": 0}
     base, nodes, aliases = snapshot(config["repo"], accepted(config))
     changed = {}
@@ -32,6 +36,12 @@ def propose(config, manifest, manifest_dir=None):
         require(n.id not in aliases, f"cannot reuse retired ID: {n.id}")
         changed[n.id] = n
     require(decisions == set(changed), "each supplied node needs exactly one admission declaration")
+    require(set(operations) == set(changed), "each supplied node needs an explicit create or update operation")
+    for key, operation in operations.items():
+        if operation == "update":
+            require(key in nodes, f"cannot update missing node: {key}; read/search existing knowledge first")
+        else:
+            require(key not in nodes, f"cannot create existing node: {key}; read it and propose an update instead")
     for key, n in changed.items():
         n.path = nodes[key].path if key in nodes else f"nodes/{key}.md"
         nodes[key] = n
@@ -82,7 +92,7 @@ def propose(config, manifest, manifest_dir=None):
     (root / "aliases.json").write_text(json.dumps(aliases, indent=2) + "\n", encoding="utf-8")
     record_path = f"reviews/{ident}.json"
     record = {"id": ident, "base_revision": base, "created_at": datetime.now(timezone.utc).isoformat(),
-              "admission": manifest.get("admission", []), "merges": merges,
+              "admission": manifest.get("admission", []), "operations": operations, "merges": merges,
               "semantic_review": "pending", "automatic_merge": False}
     (root / "reviews").mkdir(exist_ok=True)
     (root / record_path).write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")

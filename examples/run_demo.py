@@ -80,7 +80,7 @@ def replay(stream):
          [{"type": "depends_on", "target": "kn-journal-compatibility"}],
          "When changing recovery, replay retained records from supported writer versions before rollout. "
          "The retained-data constraint applies independently of writer deployment. Reassess after migration.")]
-    manifest = {"nodes": [], "admission": []}
+    manifest = {"nodes": [], "admission": [], "operations": {}}
     for key, title, kind, relations, body in definitions:
         meta = {"schema_version": 1, "id": key, "title": title, "type": kind, "tags": ["orders", "journal"],
                 "weight": .9 if kind == "constraint" else .7, "status": "active",
@@ -93,6 +93,7 @@ def replay(stream):
         path = candidates / f"{key}.md"
         path.write_text(Node(meta, body).markdown(), encoding="utf-8")
         manifest["nodes"].append(str(path))
+        manifest["operations"][key] = "create"
         manifest["admission"].append({"id": key,
             "not_cheaply_recoverable": {"passes": True, "reason": "Combines retained-data operations guidance with independent readers and writers."},
             "not_skill_duplicate": {"passes": True, "reason": "Fixture has no skill covering this deployment-specific condition."},

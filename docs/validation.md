@@ -22,3 +22,9 @@ dirty-checkout preservation, acceptance locking and remote-workflow separation.
 All 33 automated tests passed after this change. The Windows `install.ps1` script
 built and installed the wheel, created a separate demo knowledge repository and
 index, and the installed CLI was checked from outside the source root.
+
+The capture and maintenance skills were refactored into executable workflows.
+Both passed skill validation. Their command sequences were exercised on local,
+hand-authored fixtures: zero-write capture, schema validation, create/update proposals,
+review, local acceptance, retrieval, anchor lookup, maintenance and impact inspection.
+This checks command compatibility, not autonomous agent judgment or capture quality.

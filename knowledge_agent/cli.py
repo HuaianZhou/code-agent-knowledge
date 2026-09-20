@@ -7,16 +7,21 @@ from pathlib import Path
 import sqlite3
 import sys
 
-from .gitstore import accepted, config_path, initialize, load_config, snapshot, synchronize
+from .gitstore import accepted, config_path, initialize, load_config, setup, snapshot, synchronize
 from .index import Embedder, Index
 from .model import KnowledgeError, RELATIONS, STATUSES, TYPES, parse, require
-from .workflow import maintenance, open_request, propose, push, review, review_impact
+from .workflow import accept_local, maintenance, open_request, propose, push, review, review_impact
 
 
 def parser():
     p = argparse.ArgumentParser(description="Git-backed knowledge for coding agents")
     p.add_argument("--config", help="Persistent config path (or KNOWLEDGE_AGENT_CONFIG)")
     sub = p.add_subparsers(dest="command", required=True)
+    local = sub.add_parser("setup", help="Create a local knowledge repository and index; no GitHub required")
+    local.add_argument("--repo", help="Default: knowledge folder beside the config file")
+    local.add_argument("--branch")
+    local.add_argument("--name", help="Git author for the new repo; default: Knowledge Agent")
+    local.add_argument("--email", help="Git author email for the new repo; default: knowledge-agent@localhost")
     init = sub.add_parser("initialize", help="Configure existing knowledge repo or clone a remote")
     init.add_argument("--repo", required=True)
     init.add_argument("--remote")
@@ -63,6 +68,11 @@ def parser():
     proposal.add_argument("manifest", help="JSON with node paths and admission declarations; empty list means zero writes")
     rev = sub.add_parser("review")
     rev.add_argument("branch")
+    accept = sub.add_parser("accept", help="Explicitly accept a reviewed proposal in a local-only repository")
+    accept.add_argument("branch")
+    accept.add_argument("--reviewed-accepted", required=True, help="Full accepted_revision from review")
+    accept.add_argument("--reviewed-proposal", required=True, help="Full proposal_revision from review")
+    accept.add_argument("--reason", required=True, help="Review rationale, recorded in the merge commit")
     impact = sub.add_parser("review-impact")
     impact.add_argument("--repo", required=True)
     impact.add_argument("--path", action="append", default=[])
@@ -84,6 +94,11 @@ def parser():
 
 
 def execute(args):
+    if args.command == "setup":
+        config, created = setup(args.config, args.repo, args.branch, args.name, args.email)
+        result = Index(config["state"]).rebuild(config["repo"], accepted(config), Embedder(config["embedding"]))
+        return {"config": str(config_path(args.config)), "repo": config["repo"], "created": created,
+                "next": "Use task-end to propose nodes, review to inspect them, and accept after review.", **result}
     if args.command == "initialize":
         config = initialize(args.config, args.repo, args.remote, args.branch, args.backend, args.model, args.model_revision)
         result = Index(config["state"]).rebuild(config["repo"], accepted(config), Embedder(config["embedding"]))
@@ -107,6 +122,15 @@ def execute(args):
         return propose(config, json.loads(path.read_text(encoding="utf-8")), path.parent)
     if args.command == "review":
         return review(config, args.branch, index, Embedder(config["embedding"]))
+    if args.command == "accept":
+        # Load the model before changing Git, so an unavailable backend cannot cause a partial acceptance.
+        embedder = Embedder(config["embedding"])
+        result = accept_local(config, args.branch, args.reviewed_accepted, args.reviewed_proposal, args.reason)
+        try:
+            index.rebuild(config["repo"], result["revision"], embedder)
+        except Exception as exc:
+            return {**result, "indexed": False, "warning": f"Acceptance is committed; run rebuild-index: {exc}"}
+        return {**result, "indexed": True}
     if args.command == "push":
         return push(config, args.branch)
     if args.command == "open-request":

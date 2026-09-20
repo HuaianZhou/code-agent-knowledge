@@ -8,10 +8,10 @@ import tempfile
 import unittest
 
 from knowledge_agent.cli import main
-from knowledge_agent.gitstore import accepted, git, initialize, snapshot, synchronize
+from knowledge_agent.gitstore import accepted, git, initialize, load_config, setup, snapshot, synchronize
 from knowledge_agent.index import Embedder, Index
 from knowledge_agent.model import KnowledgeError, Node, parse, validate_graph
-from knowledge_agent.workflow import maintenance, propose, review, review_impact
+from knowledge_agent.workflow import accept_local, maintenance, propose, push, review, review_impact
 
 
 def node(key, title=None, relations=(), weight=0.5, status="active", condition="v1"):
@@ -384,6 +384,95 @@ class KnowledgeTest(unittest.TestCase):
         self.assertEqual(nodes["A"].meta["relations"][0]["target"], "B")
         record = next((Path(report["worktree"]) / "reviews").glob("*.json"))
         self.assertEqual(json.loads(record.read_text())["operations"], {"B": "update"})
+
+
+    def test_setup_creates_local_repository_and_is_repeatable(self):
+        path = self.root / "new-client" / "config.json"
+        out = io.StringIO()
+        with redirect_stdout(out):
+            self.assertEqual(main(["--config", str(path), "setup"]), 0)
+        result = json.loads(out.getvalue())
+        self.assertTrue(result["created"])
+        config = load_config(path)
+        self.assertEqual(git(config["repo"], "remote").stdout, "")
+        self.assertEqual(git(config["repo"], "config", "user.email").stdout.strip(), "knowledge-agent@localhost")
+        self.assertEqual(Index(config["state"]).view().nodes, {})
+        before = path.read_bytes()
+        again, created = setup(path)
+        self.assertFalse(created)
+        self.assertEqual(before, path.read_bytes())
+        self.assertEqual(synchronize(again), {"revision": result["revision"], "mode": "local", "stale": False})
+
+    def test_setup_preserves_existing_directories_and_configuration(self):
+        existing = self.root / "existing"
+        existing.mkdir()
+        (existing / "keep.txt").write_text("user content")
+        with self.assertRaises(KnowledgeError):
+            setup(self.root / "new.json", existing)
+        self.assertEqual((existing / "keep.txt").read_text(), "user content")
+        with self.assertRaises(KnowledgeError):
+            setup(self.root / "config.json", self.root / "different")
+        self.assertFalse((self.root / "different").exists())
+
+    def test_local_acceptance_refreshes_index_without_push(self):
+        proposal = self.proposal(node("D", relations=[("depends_on", "B")]))
+        report = review(self.config, proposal["branch"], self.index, self.embed)
+        out = io.StringIO()
+        with redirect_stdout(out):
+            result = main(["--config", str(self.root / "config.json"), "accept", proposal["branch"],
+                           "--reviewed-accepted", report["accepted_revision"],
+                           "--reviewed-proposal", report["proposal_revision"], "--reason", "Fixture evidence reviewed"])
+        self.assertEqual(result, 0)
+        accepted_result = json.loads(out.getvalue())
+        self.assertTrue(accepted_result["indexed"])
+        self.assertFalse(accepted_result["pushed"])
+        self.assertIn("D", self.index.view().nodes)
+        self.assertEqual(self.index.view().revision, accepted(self.config))
+        self.assertIn("Fixture evidence reviewed", git(self.repo, "log", "-1", "--format=%B").stdout)
+        self.assertEqual(git(self.repo, "status", "--porcelain").stdout, "")
+
+    def test_acceptance_rejects_stale_review_and_dirty_checkout(self):
+        proposal = self.proposal(node("D"))
+        proposed = snapshot(self.repo, proposal["branch"])[0]
+        for old, new in [("wrong", proposed), (self.rev, "wrong")]:
+            with self.assertRaisesRegex(KnowledgeError, "review is stale"):
+                accept_local(self.config, proposal["branch"], old, new, "Reviewed")
+        dirty = self.repo / "keep.txt"
+        dirty.write_text("keep this work")
+        with self.assertRaisesRegex(KnowledgeError, "uncommitted"):
+            accept_local(self.config, proposal["branch"], self.rev, proposed, "Reviewed")
+        self.assertEqual(dirty.read_text(), "keep this work")
+        self.assertEqual(accepted(self.config), self.rev)
+        self.assertFalse((self.repo / ".git" / "knowledge-agent-accept.lock").exists())
+
+    def test_acceptance_serializes_and_rejects_remote_repository(self):
+        proposal = self.proposal(node("D"))
+        proposed = snapshot(self.repo, proposal["branch"])[0]
+        lock = self.repo / ".git" / "knowledge-agent-accept.lock"
+        lock.write_text("another reviewer")
+        with self.assertRaisesRegex(KnowledgeError, "another acceptance"):
+            accept_local(self.config, proposal["branch"], self.rev, proposed, "Reviewed")
+        self.assertEqual(lock.read_text(), "another reviewer")
+        lock.unlink()
+        git(self.repo, "remote", "add", "origin", str(self.root / "remote.git"))
+        with self.assertRaisesRegex(KnowledgeError, "local repositories"):
+            accept_local(self.config, proposal["branch"], self.rev, proposed, "Reviewed")
+        self.assertEqual(accepted(self.config), self.rev)
+
+    def test_local_push_explains_local_acceptance(self):
+        with self.assertRaisesRegex(KnowledgeError, "use review and accept"):
+            push(self.config, "knowledge/proposal-missing")
+
+    def test_acceptance_rejects_concurrent_accepted_changes(self):
+        proposal = self.proposal(node("D"))
+        proposed = snapshot(self.repo, proposal["branch"])[0]
+        self.save(node("E"))
+        current = self.commit()
+        with self.assertRaisesRegex(KnowledgeError, "review is stale"):
+            accept_local(self.config, proposal["branch"], self.rev, proposed, "Old review")
+        with self.assertRaisesRegex(KnowledgeError, "older accepted knowledge"):
+            accept_local(self.config, proposal["branch"], current, proposed, "Re-review without reconciliation")
+        self.assertEqual(accepted(self.config), current)
 
 
 if __name__ == "__main__":

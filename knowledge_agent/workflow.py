@@ -5,10 +5,11 @@ from collections import deque
 from pathlib import Path
 from datetime import datetime, timezone
 import json
+import os
 import subprocess
 import uuid
 
-from .gitstore import accepted, git, revision, snapshot, synchronize
+from .gitstore import accepted, git, has_remote, revision, snapshot, synchronize
 from .model import DEPENDENCIES, KnowledgeError, admission, parse, require, resolve, validate_graph
 
 
@@ -229,11 +230,51 @@ def maintenance(view, repositories, index=None, embedder=None):
 
 
 def push(config, branch):
+    require(has_remote(config), "local repository has no origin; use review and accept, or configure a remote")
     require(branch.startswith("knowledge/"), "only knowledge contribution branches may be pushed")
     git(config["repo"], "check-ref-format", "--branch", branch)
     revision(config["repo"], branch)
     git(config["repo"], "push", "--set-upstream", "origin", f"{branch}:refs/heads/{branch}")
     return {"pushed": branch, "request_created": False}
+
+
+def accept_local(config, branch, reviewed_accepted, reviewed_proposal, reason):
+    """Explicit human/agent approval of exact commits, serialized per Git repository."""
+    require(not has_remote(config), "accept is for local repositories without origin; use the remote review workflow")
+    require(branch.startswith("knowledge/"), "accept expects a knowledge contribution branch")
+    require(isinstance(reason, str) and bool(reason.strip()), "a review rationale is required")
+    repo = config["repo"]
+    common = Path(git(repo, "rev-parse", "--git-common-dir").stdout.strip())
+    if not common.is_absolute():
+        common = Path(repo) / common
+    lock = common.resolve() / "knowledge-agent-accept.lock"
+    try:
+        fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    except FileExistsError as exc:
+        raise KnowledgeError("another acceptance is running; if interrupted, verify it stopped before removing the acceptance lock") from exc
+    try:
+        os.close(fd)
+        current = revision(repo, config["branch"])
+        proposed = revision(repo, branch)
+        require(current == reviewed_accepted and proposed == reviewed_proposal,
+                "review is stale: rerun review and approve the exact accepted and proposal revisions")
+        require(git(repo, "symbolic-ref", "--short", "HEAD").stdout.strip() == config["branch"],
+                "accepted branch must be checked out in the knowledge repository")
+        require(not git(repo, "status", "--porcelain", "--untracked-files=all").stdout,
+                "knowledge checkout has uncommitted files; preserve them and retry after resolving them")
+        require(not git(repo, "status", "--porcelain", "--ignored").stdout,
+                "knowledge checkout has ignored files; move them aside before acceptance")
+        require(git(repo, "merge-base", "--is-ancestor", current, proposed, check=False).returncode == 0,
+                "proposal is based on older accepted knowledge; reconcile the contribution branch and rerun review")
+        require(current != proposed, "proposal is already accepted")
+        snapshot(repo, proposed)
+        # Merge the reviewed SHA, never a moving branch name. Record approval in Git history.
+        git(repo, "merge", "--no-ff", "--no-edit", "-m",
+            f"Accept {branch}\n\nReviewed accepted: {current}\nReviewed proposal: {proposed}\n\n{reason.strip()}", proposed)
+        return {"outcome": "accepted", "revision": revision(repo, config["branch"]),
+                "proposal_revision": proposed, "branch": config["branch"], "mode": "local", "pushed": False}
+    finally:
+        lock.unlink()
 
 
 def open_request(config, branch, title, body_file):

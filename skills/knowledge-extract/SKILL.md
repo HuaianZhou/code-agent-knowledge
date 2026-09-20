@@ -41,6 +41,9 @@ Run `task-end MANIFEST` to validate and prepare an isolated committed proposal;
 check `committed` and preserve the worktree on failure. Report the branch and
 evidence gaps. This skill does not authorize pushing or opening remote requests;
 use those commands only within the user's existing sharing authorization.
+For a local-only knowledge repository, leave the branch for `review` and explicit
+`accept`; no GitHub repository, push or pull request is required. `setup` can create
+the local knowledge repository and persistent configuration when requested.
 
 Installation does not invoke this skill automatically. A host task-end instruction
 or agent integration must actually call it while conversation context is available.

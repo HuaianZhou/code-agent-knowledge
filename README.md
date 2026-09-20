@@ -22,7 +22,78 @@ central database or Basic Memory deployment is required. See the
 [discussion spec](knowledge-agent-spec.md), [implementation plan](PLAN.md) and
 [node/manifest schema](docs/schema.md).
 
-## Install and try the complete local loop
+## Install and set up local knowledge
+
+GitHub is optional. Install the tool and run `setup` to create a local knowledge
+repository, persistent configuration and search index. Python 3.11+ and Git must
+already be installed. Package installation needs network access to download Python
+dependencies; the default local workflow runs offline after installation.
+
+On Windows, from this project's folder:
+
+```powershell
+.\install.ps1
+```
+
+If Python is not on PATH, pass its executable path with `-Python`. The installer
+uses `.venv` inside this project and prints the CLI's full path. It does not change
+your global Git settings or PowerShell execution policy. Alternatively, install
+manually (also supported on macOS/Linux with the corresponding venv paths):
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install .
+.\.venv\Scripts\knowledge-agent.exe setup
+```
+
+By default, setup creates:
+
+```text
+~/.knowledge-agent/
+├── config.json       Persistent client configuration
+├── knowledge/        Local Git repository containing accepted Markdown nodes
+└── state/            Rebuildable index and proposal worktrees
+```
+
+On Windows, `~` is your user folder, such as `C:\Users\sarah`. `--config` or
+`KNOWLEDGE_AGENT_CONFIG` changes the configuration location; setup puts the default
+repository and state beside that file. To choose locations explicitly:
+
+```text
+knowledge-agent --config /path/to/client/config.json setup --repo /path/to/knowledge
+```
+
+Setup is repeatable and preserves existing configuration. It refuses to overwrite
+an existing repository destination; use `initialize` to adopt an existing repo.
+New repositories use the local Git identity `Knowledge Agent <knowledge-agent@localhost>`.
+Supply `setup --name "Your Name" --email "your@email"` to choose an author at creation.
+This does not create an account, configure a remote, install skills into an agent,
+or enable automatic extraction. Those integrations remain explicit.
+
+## Propose, review and accept locally
+
+```text
+knowledge-agent task-end /path/to/proposal.json
+knowledge-agent review knowledge/proposal-ID
+knowledge-agent accept knowledge/proposal-ID --reviewed-accepted ACCEPTED_SHA --reviewed-proposal PROPOSAL_SHA --reason "Reviewed evidence, scope and duplicate candidates"
+```
+
+Use the full `accepted_revision` and `proposal_revision` returned by `review`.
+`accept` is the explicit approval action after semantic review; a structural review
+report alone is not approval. It merges the reviewed proposal into the accepted
+branch, records the rationale in Git history and refreshes the index. No push or PR
+is needed. `synchronize` in local mode simply indexes the current accepted branch.
+
+Acceptance requires a clean knowledge checkout on the accepted branch, the exact
+reviewed commits, and a proposal containing the latest accepted history. Concurrent
+acceptance commands are serialized using a repository lock. If accepted knowledge
+changes, reconcile the proposal branch and review again. If a process is interrupted,
+verify it is no longer running before removing `.git/knowledge-agent-accept.lock`;
+inspect Git status and finish or abort any interrupted merge before retrying.
+If index refresh fails after a successful merge, output says `indexed: false` and
+instructs you to run `rebuild-index`; the accepted commit remains saved.
+
+## Try the complete sharing demo
 
 Requires Python 3.11+ and Git. From this project directory:
 
@@ -145,7 +216,8 @@ as ID existence. Review refreshes the accepted
 state and flags concurrent ID conflicts, integrity errors and duplicate candidates
 with both scopes visible. Similarity does not establish equivalence. Rerun review
 immediately before a serialized host-managed merge; a report is not authorization
-or protection against a later concurrent merge. The tool never auto-merges.
+or protection against a later concurrent merge. Acceptance is always explicit:
+`accept` handles local-only repositories; repositories with `origin` use remote review.
 
 Push and request creation are distinct explicit commands:
 

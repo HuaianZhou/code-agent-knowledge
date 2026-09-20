@@ -52,8 +52,49 @@ def config_path(path=None):
 
 def load_config(path=None):
     p = config_path(path)
-    require(p.exists(), f"configuration missing: {p}; run initialize")
+    require(p.exists(), f"configuration missing: {p}; run setup")
     return json.loads(p.read_text(encoding="utf-8"))
+
+
+def setup(config=None, repo=None, branch=None, name=None, email=None):
+    """Create a private-to-this-machine knowledge store; never overwrite a directory."""
+    p = config_path(config)
+    if p.exists():
+        data = load_config(p)
+        require(repo is None or Path(repo).resolve() == Path(data["repo"]).resolve(),
+                "configuration already points to another repository")
+        require(branch is None or branch == data["branch"], "configuration already uses another branch")
+        require(name is None and email is None, "setup does not change an existing Git identity")
+        snapshot(data["repo"], accepted(data))
+        return data, False
+    target = Path(repo).resolve() if repo else p.parent / "knowledge"
+    require(not target.exists(), "repository destination exists; use initialize for an existing repository")
+    require(not p.is_relative_to(target), "configuration must be outside the knowledge repository")
+    branch = branch or "main"
+    require(not branch.startswith("-"), "invalid branch")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    git(target.parent, "check-ref-format", "--branch", branch)
+    require(name is None or bool(name.strip()), "name cannot be empty")
+    require(email is None or bool(email.strip()), "email cannot be empty")
+    target.mkdir()
+    git(target, "init", "-b", branch)
+    # A local application identity makes offline first use independent of GitHub.
+    git(target, "config", "user.name", name or "Knowledge Agent")
+    git(target, "config", "user.email", email or "knowledge-agent@localhost")
+    (target / "nodes").mkdir()
+    (target / "README.md").write_text(
+        "# Local agent knowledge\n\nReviewed project knowledge lives in nodes/ as Markdown.\n"
+        "This repository was created locally; no hosted account or remote is required.\n",
+        encoding="utf-8")
+    (target / "nodes" / ".gitkeep").write_text("", encoding="utf-8")
+    (target / "aliases.json").write_text("{}\n", encoding="utf-8")
+    git(target, "add", "--", "README.md", "nodes/.gitkeep", "aliases.json")
+    git(target, "commit", "-m", "Initialize local agent knowledge")
+    return initialize(p, target, branch=branch), True
+
+
+def has_remote(config):
+    return git(config["repo"], "remote", "get-url", "origin", check=False).returncode == 0
 
 
 def initialize(config, repo, remote=None, branch="main", backend="lexical", model=None, model_revision=None):
@@ -82,6 +123,9 @@ def initialize(config, repo, remote=None, branch="main", backend="lexical", mode
 def synchronize(config):
     repo, branch = config["repo"], config["branch"]
     old = accepted(config)
+    if not has_remote(config):
+        rev, _, _ = snapshot(repo, branch)
+        return {"revision": rev, "stale": False, "mode": "local"}
     # Fetch does not touch the accepted checkout or unrelated local modifications.
     result = git(repo, "fetch", "origin", f"refs/heads/{branch}", check=False)
     if result.returncode:
@@ -96,5 +140,7 @@ def synchronize(config):
 
 
 def accepted(config):
+    if not has_remote(config):
+        return revision(config["repo"], config["branch"])
     result = git(config["repo"], "rev-parse", "--verify", "refs/knowledge-agent/accepted", check=False)
     return result.stdout.strip() if result.returncode == 0 else revision(config["repo"], config["branch"])

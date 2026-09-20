@@ -27,6 +27,11 @@ and preserves source provenance. Do not delete history to hide uncertainty.
 
 Rerun review immediately before a merge. The report identifies the observed accepted
 SHA; the host's serialized queue or merge policy must ensure it is still current.
-There is no automatic merge command or authority. This skill does not grant remote
+For a repository without `origin`, explicit approval can use `accept BRANCH
+--reviewed-accepted SHA --reviewed-proposal SHA --reason TEXT` with the full revisions
+from review. Verify semantic admission before approving; acceptance records the
+rationale, merges locally and refreshes the index. Stale reviews or dirty checkouts
+must be resolved rather than bypassed. There is no automatic merge authority.
+This skill does not grant remote
 write or messaging permission. A scheduler must invoke this workflow independently
 of new submissions; installing the skill alone does not schedule maintenance.

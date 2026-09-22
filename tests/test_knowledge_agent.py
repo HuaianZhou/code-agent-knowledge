@@ -386,6 +386,72 @@ class KnowledgeTest(unittest.TestCase):
         self.assertEqual(json.loads(record.read_text())["operations"], {"B": "update"})
 
 
+    def test_anchor_lookup_isolates_same_path_across_repositories(self):
+        for n, repo in [(self.a, "orders"), (self.b, "billing")]:
+            n.meta["anchors"] = [{"repo": repo, "path": "src/state.py", "symbol": "decode",
+                                   "role": "affected_code", "verified_commit": self.rev}]
+        self.save(self.a, self.b)
+        self.commit()
+        self.index.rebuild(self.repo, "main", self.embed)
+        self.assertEqual([n["metadata"]["id"] for n in self.index.view().anchor("orders", "src/state.py")["results"]], ["A"])
+        self.assertEqual([n["metadata"]["id"] for n in self.index.view().anchor("billing", "src/state.py")["results"]], ["B"])
+
+    def test_combined_filters_precede_global_weight_order(self):
+        self.a.meta.update(type="decision", tags=["persistence", "migration"], weight=.95)
+        self.b.meta.update(type="decision", tags=["persistence", "migration"], status="archived", weight=1)
+        self.c.meta.update(type="decision", tags=["persistence", "migration"], weight=.7)
+        self.save(self.a, self.b, self.c, node("D", weight=1))
+        self.commit()
+        self.index.rebuild(self.repo, "main", self.embed)
+        result = self.index.search(self.index.view(), order="weight", types=["decision"],
+                                   tags=["persistence", "migration"], statuses=["active"])
+        self.assertEqual([n["metadata"]["id"] for n in result["results"]], ["A", "C"])
+
+    def test_incremental_and_fresh_index_have_equivalent_graph_and_queries(self):
+        self.a.meta["relations"] = [{"type": "depends_on", "target": "C"}]
+        self.a.body += " Reconcile retained records before deploying a new encoding."
+        self.c.meta["anchors"] = [{"repo": "orders", "path": "state.py", "role": "evidence", "verified_commit": self.rev}]
+        self.save(self.a, self.c, node("D", "Delayed archive replays"))
+        self.commit()
+        self.index.rebuild(self.repo, "main", self.embed)
+        fresh = Index(self.root / "fresh-index")
+        fresh.rebuild(self.repo, "main", self.embed)
+        a, b = self.index.view(), fresh.view()
+        self.assertEqual({k: n.as_dict() for k, n in a.nodes.items()}, {k: n.as_dict() for k, n in b.nodes.items()})
+        self.assertEqual(a.context("A", max_tokens=100000), b.context("A", max_tokens=100000))
+        self.assertEqual(a.anchor("orders", "state.py"), b.anchor("orders", "state.py"))
+        for query in ("retained records", "archive replay", "migration"):
+            left = self.index.search(a, query, self.embed)
+            right = fresh.search(b, query, self.embed)
+            self.assertEqual([n["metadata"]["id"] for n in left["results"]], [n["metadata"]["id"] for n in right["results"]])
+
+    def test_proposal_is_invisible_until_acceptance(self):
+        proposal = self.proposal(node("D", "Novel retained data rule"))
+        sync = synchronize(self.config)
+        self.index.rebuild(self.repo, sync["revision"], self.embed)
+        with self.assertRaises(KnowledgeError):
+            self.index.view().read("D")
+        self.assertNotIn("D", [n["metadata"]["id"] for n in self.index.search(self.index.view(), order="weight")["results"]])
+        proposed = snapshot(self.repo, proposal["branch"])[0]
+        accepted_result = accept_local(self.config, proposal["branch"], self.rev, proposed, "Fixture review")
+        self.index.rebuild(self.repo, accepted_result["revision"], self.embed)
+        self.assertEqual(self.index.view().read("D")["resolved_id"], "D")
+
+    def test_shared_proposal_push_is_not_accepted_until_remote_main_advances(self):
+        bare = self.root / "team.git"
+        git(self.root, "clone", "--bare", self.repo, bare)
+        git(self.repo, "remote", "add", "origin", bare)
+        reader = initialize(self.root / "reader" / "config.json", self.root / "reader-repo", str(bare))
+        proposal = self.proposal(node("D"))
+        push(self.config, proposal["branch"])
+        before = synchronize(reader)
+        self.assertNotIn("D", snapshot(reader["repo"], before["revision"])[1])
+        # Simulate an external maintainer: plain-Git remote acceptance is NOT implemented by our tool.
+        git(self.repo, "push", "origin", f"{proposal['branch']}:refs/heads/main")
+        after = synchronize(reader)
+        self.assertIn("D", snapshot(reader["repo"], after["revision"])[1])
+        self.assertNotEqual(before["revision"], after["revision"])
+
     def test_setup_creates_local_repository_and_is_repeatable(self):
         path = self.root / "new-client" / "config.json"
         out = io.StringIO()

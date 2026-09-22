@@ -28,3 +28,22 @@ Both passed skill validation. Their command sequences were exercised on local,
 hand-authored fixtures: zero-write capture, schema validation, create/update proposals,
 review, local acceptance, retrieval, anchor lookup, maintenance and impact inspection.
 This checks command compatibility, not autonomous agent judgment or capture quality.
+
+## Three-layer evaluation implementation
+
+On 2026-09-21, all 44 automated tests passed (69 seconds). Added tests cover
+cross-repository anchor isolation, combined filters and ordering, incremental/full
+index equivalence, local/remote proposal visibility, evaluator isolation boundaries,
+artifact-based scoring, and hidden-grader calibration against compatible and broken
+fixture implementations.
+
+The evaluation CLI prepared eight capture/maintenance scenarios and nine reuse
+trials (three conditions, three repeats). These are explicitly `prepared_not_run`,
+with model `not-configured`; preparing fixtures is not an agent evaluation.
+The offline lexical diagnostic returned Recall@3 = 0.9 and MRR@3 = 0.7333 over ten
+queries. Its `passed` field is null: this does not establish semantic retrieval.
+
+Docker and the optional embedding backend are unavailable in this environment.
+Real isolated agent runs, independent capture scorecards, transformer inference,
+and real-project adoption measurements remain pending. See [the executable
+evaluation guide](evaluation.md) and [coverage map](evaluation-coverage.md).

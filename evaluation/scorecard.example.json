@@ -1,0 +1,8 @@
+{
+  "reviewer": "REPLACE_WITH_INDEPENDENT_REVIEWER",
+  "admission": {"passes": false, "evidence": "REPLACE with artifact/trace references supporting your judgment"},
+  "evidence": {"passes": false, "evidence": "REPLACE with source and evidence-state checks"},
+  "reuse": {"passes": false, "evidence": "REPLACE with existing-node comparison and duplicate assessment"},
+  "relationships": {"passes": false, "evidence": "REPLACE with rationale for links or their absence"},
+  "scope": {"passes": false, "evidence": "REPLACE with applicability/version/invalidation checks"}
+}

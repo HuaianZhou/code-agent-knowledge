@@ -260,7 +260,11 @@ Tests cover schema/link failures, both-direction traversal, cycles and budgets,
 filtering/order semantics, anchor lookup, index rollback/concurrency, metadata-only
 updates/deletions/rebuild, immutable revisions, isolated contributions, merge aliases,
 latest-state duplicate/conflict review, code movement and offline Git synchronization.
-The demo data is hand-authored; see the separate [behavioral evaluation protocol](docs/evaluation.md).
+The demo data is hand-authored; see the executable [three-layer evaluation guide](docs/evaluation.md)
+and [coverage map](docs/evaluation-coverage.md). The evaluation harness includes fixed
+capture/maintenance conversations, paraphrase retrieval metrics, Docker-isolated
+agent runs, artifact-based scoring, and paired no-knowledge/flat/graph experiments.
+Prepared trials are not reported as completed agent evaluations.
 No claim of measured agent productivity or automatic semantic deduplication is made.
 
 The actual Kiro draft was not supplied. Company-approved embedding model, remote and

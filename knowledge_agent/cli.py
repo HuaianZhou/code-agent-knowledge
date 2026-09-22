@@ -22,6 +22,9 @@ def parser():
     local.add_argument("--branch")
     local.add_argument("--name", help="Git author for the new repo; default: Knowledge Agent")
     local.add_argument("--email", help="Git author email for the new repo; default: knowledge-agent@localhost")
+    local.add_argument("--backend", choices=("lexical", "sentence-transformers"))
+    local.add_argument("--model")
+    local.add_argument("--model-revision")
     init = sub.add_parser("initialize", help="Configure existing knowledge repo or clone a remote")
     init.add_argument("--repo", required=True)
     init.add_argument("--remote")
@@ -95,7 +98,8 @@ def parser():
 
 def execute(args):
     if args.command == "setup":
-        config, created = setup(args.config, args.repo, args.branch, args.name, args.email)
+        config, created = setup(args.config, args.repo, args.branch, args.name, args.email,
+                                args.backend, args.model, args.model_revision)
         result = Index(config["state"]).rebuild(config["repo"], accepted(config), Embedder(config["embedding"]))
         return {"config": str(config_path(args.config)), "repo": config["repo"], "created": created,
                 "next": "Use task-end to propose nodes, review to inspect them, and accept after review.", **result}

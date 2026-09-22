@@ -39,8 +39,12 @@ It can never count as a semantic-search pass.
 Prepare fresh public inputs and private evaluator criteria:
 
 ```powershell
-.\.venv\Scripts\python.exe -m evaluation prepare-capture --output .demo/capture-run --model PINNED_AGENT_MODEL
+.\.venv\Scripts\python.exe -m evaluation prepare-capture --output .demo/capture-run --model PINNED_AGENT_MODEL --embedding-model EMBEDDING_MODEL --embedding-revision FULL_IMMUTABLE_MODEL_COMMIT
 ```
+
+Capture and reuse preparation require `--embedding-model` and `--embedding-revision`;
+there is no implicit lexical fallback. `--lexical-diagnostic` explicitly selects
+the lightweight harness check instead. Prepared configs retain the embedding pin.
 
 Eight fixed scenarios cover cheap lookup, existing-skill overlap, an actionable
 human-reported constraint, paraphrase/reuse, uncertain inference, zero-value work,
@@ -64,7 +68,10 @@ directory alone is not isolation. The runner never mounts private.json, evaluato
 source, other trials, the Docker socket, or the host home. No host-run fallback
 exists. `run` refuses to start without Docker, and each trial can run only once.
 
-Build `evaluation/Dockerfile` as a base runtime, then derive an image that installs
+Build `evaluation/Dockerfile` with `--build-arg EMBEDDING_MODEL=...` and
+`--build-arg EMBEDDING_REVISION=...`, using the same pinned values as the trials
+and `evaluation/` as the build context. It caches the model and disables model
+downloads at runtime. Then derive an image that installs
 your chosen coding-agent CLI. It includes Python, Git, YAML/sqlite-vec dependencies
 and a generic adapter; **it does not include an LLM or coding-agent installation**.
 The final image must be built/pulled explicitly; runs resolve and record its local
@@ -122,14 +129,14 @@ Prepare paired trials with identical starting code, model declaration, output-to
 budget and knowledge context budget. Run order is randomized using a recorded seed.
 
 ```powershell
-.\.venv\Scripts\python.exe -m evaluation prepare-reuse --output .demo/reuse-curated --model PINNED_AGENT_MODEL --repeats 3 --context-budget 2400 --seed 42
+.\.venv\Scripts\python.exe -m evaluation prepare-reuse --output .demo/reuse-curated --model PINNED_AGENT_MODEL --embedding-model EMBEDDING_MODEL --embedding-revision FULL_IMMUTABLE_MODEL_COMMIT --repeats 3 --context-budget 2400 --seed 42
 ```
 
 The default corpus is explicitly `curated_fixture`. To test the output from Task A
 without silently hand-correcting it, prepare a separate experiment:
 
 ```powershell
-.\.venv\Scripts\python.exe -m evaluation prepare-reuse --output .demo/reuse-raw --model PINNED_AGENT_MODEL --capture-trial .demo/capture-run/implicit_constraint --repeats 3
+.\.venv\Scripts\python.exe -m evaluation prepare-reuse --output .demo/reuse-raw --model PINNED_AGENT_MODEL --embedding-model EMBEDDING_MODEL --embedding-revision FULL_IMMUTABLE_MODEL_COMMIT --capture-trial .demo/capture-run/implicit_constraint --repeats 3
 ```
 
 Raw experiments read the submitted proposal commit (or an empty set after zero
@@ -146,8 +153,9 @@ truncation. They need not use exactly equal bytes due to indivisible records.
 This is **controlled retrieval**, supplied in a read-only context file to isolate
 graph expansion's contribution. It does not prove that an agent spontaneously
 invokes retrieval before coding. That requires a subsequent host-integration study.
-The pilot uses lexical entry retrieval consistently in both conditions; semantic
-search is evaluated separately in layer 1. The no-knowledge agent receives no corpus
+The pilot uses the declared semantic embedding model consistently in both conditions.
+Use the same pinned model as layer 1 and capture. A separate `--lexical-diagnostic`
+run is permitted for harness debugging, but is not a semantic evaluation. The no-knowledge agent receives no corpus
 or search index, and none of the agents receives the private grader.
 
 Execute each trial in `experiment.json`'s run order with the same image, network and

@@ -26,6 +26,10 @@ def main(argv=None):
     reuse.add_argument("--seed", type=int, default=42)
     reuse.add_argument("--context-budget", type=int, default=2400)
     reuse.add_argument("--capture-trial")
+    for preparation in (capture, reuse):
+        preparation.add_argument("--embedding-model")
+        preparation.add_argument("--embedding-revision")
+        preparation.add_argument("--lexical-diagnostic", action="store_true")
     run = sub.add_parser("run")
     run.add_argument("trial")
     run.add_argument("--image", required=True)
@@ -41,11 +45,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "prepare-capture":
-            result = prepare_capture(args.output, args.model)
+            result = prepare_capture(args.output, args.model, args.embedding_model,
+                                     args.embedding_revision, args.lexical_diagnostic)
         elif args.command == "retrieval":
             result = semantic_eval(args.output, args.model, args.revision, args.k, args.threshold, args.lexical_diagnostic)
         elif args.command == "prepare-reuse":
-            result = prepare_reuse(args.output, args.model, args.repeats, args.seed, args.context_budget, args.capture_trial)
+            result = prepare_reuse(args.output, args.model, args.repeats, args.seed, args.context_budget, args.capture_trial,
+                                   args.embedding_model, args.embedding_revision, args.lexical_diagnostic)
         elif args.command == "run":
             result = run_trial(args.trial, args.image, args.timeout, args.network, args.env_file, args.grade)
         elif args.command == "score-capture":

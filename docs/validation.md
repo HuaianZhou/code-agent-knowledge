@@ -47,3 +47,19 @@ Docker and the optional embedding backend are unavailable in this environment.
 Real isolated agent runs, independent capture scorecards, transformer inference,
 and real-project adoption measurements remain pending. See [the executable
 evaluation guide](evaluation.md) and [coverage map](evaluation-coverage.md).
+
+## Semantic retrieval run, 2026-09-22
+
+Installed Sentence Transformers 5.7.0 and Torch 2.14.0 in the project environment.
+Ran actual model inference and SQLite cosine search with
+`sentence-transformers/all-MiniLM-L6-v2` pinned to
+`1110a243fdf4706b3f48f1d95db1a4f5529b4d41` (384 dimensions).
+All ten queries returned their target at rank 1: Recall@3 = 1.0, MRR@3 = 1.0,
+passing the predeclared 0.8 Recall@3 threshold. The full
+[machine-readable result](results/semantic-minilm-20260922.json) records every query.
+This is a small synthetic retrieval test, not an agent-capture evaluation.
+
+All 46 automated tool/harness checks passed. The two new checks verify semantic
+setup configuration preservation and mandatory explicit embedding selection in
+capture preparation. Fresh eight-case capture and nine-trial reuse suites use
+the same pinned semantic model. They remain prepared, not agent-executed.

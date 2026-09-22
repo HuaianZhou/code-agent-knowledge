@@ -32,6 +32,21 @@ def declaration(key):
 
 
 class KnowledgeTest(unittest.TestCase):
+    def test_semantic_setup_preserves_configuration_and_rejects_missing_pin_before_writes(self):
+        config_path = self.root / "semantic" / "config.json"
+        repo = self.root / "semantic-store"
+        with self.assertRaises(KnowledgeError):
+            setup(config_path, repo, backend="sentence-transformers", model="example/model")
+        self.assertFalse(repo.exists())
+        config, created = setup(config_path, repo, backend="sentence-transformers",
+                                model="example/model", model_revision="a" * 40)
+        self.assertTrue(created)
+        self.assertEqual(config["embedding"]["backend"], "sentence-transformers")
+        self.assertEqual(setup(config_path)[0], config)
+        with self.assertRaises(KnowledgeError):
+            setup(config_path, backend="lexical")
+        self.assertEqual(load_config(config_path), config)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

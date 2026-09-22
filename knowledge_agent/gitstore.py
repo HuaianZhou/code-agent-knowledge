@@ -56,7 +56,7 @@ def load_config(path=None):
     return json.loads(p.read_text(encoding="utf-8"))
 
 
-def setup(config=None, repo=None, branch=None, name=None, email=None):
+def setup(config=None, repo=None, branch=None, name=None, email=None, backend=None, model=None, model_revision=None):
     """Create a private-to-this-machine knowledge store; never overwrite a directory."""
     p = config_path(config)
     if p.exists():
@@ -65,8 +65,12 @@ def setup(config=None, repo=None, branch=None, name=None, email=None):
                 "configuration already points to another repository")
         require(branch is None or branch == data["branch"], "configuration already uses another branch")
         require(name is None and email is None, "setup does not change an existing Git identity")
+        if backend is not None or model is not None or model_revision is not None:
+            require(embedding_config(backend or "sentence-transformers", model, model_revision) == data["embedding"],
+                    "setup does not change existing embeddings; edit config explicitly and rebuild-index --force")
         snapshot(data["repo"], accepted(data))
         return data, False
+    embedding = embedding_config(backend or ("sentence-transformers" if model else "lexical"), model, model_revision)
     target = Path(repo).resolve() if repo else p.parent / "knowledge"
     require(not target.exists(), "repository destination exists; use initialize for an existing repository")
     require(not p.is_relative_to(target), "configuration must be outside the knowledge repository")
@@ -90,7 +94,18 @@ def setup(config=None, repo=None, branch=None, name=None, email=None):
     (target / "aliases.json").write_text("{}\n", encoding="utf-8")
     git(target, "add", "--", "README.md", "nodes/.gitkeep", "aliases.json")
     git(target, "commit", "-m", "Initialize local agent knowledge")
-    return initialize(p, target, branch=branch), True
+    return initialize(p, target, branch=branch, backend=embedding["backend"],
+                      model=embedding["model"], model_revision=embedding["revision"]), True
+
+
+def embedding_config(backend, model=None, model_revision=None):
+    require(backend in ("lexical", "sentence-transformers"), "unsupported embedding backend")
+    if backend == "sentence-transformers":
+        require(bool(model and model_revision), "semantic backend needs --model and --model-revision")
+    else:
+        require(model in (None, "lexical-hash-v1") and model_revision in (None, "1"),
+                "lexical backend only supports lexical-hash-v1 revision 1")
+    return {"backend": backend, "model": model or "lexical-hash-v1", "revision": model_revision or "1"}
 
 
 def has_remote(config):
@@ -102,9 +117,7 @@ def initialize(config, repo, remote=None, branch="main", backend="lexical", mode
     require(not branch.startswith("-"), "invalid branch")
     p = config_path(config)
     require(not p.exists(), "configuration already exists; edit it explicitly to change settings")
-    require(backend in ("lexical", "sentence-transformers"), "unsupported embedding backend")
-    if backend == "sentence-transformers":
-        require(bool(model and model_revision), "semantic backend needs --model and --model-revision")
+    embedding = embedding_config(backend, model, model_revision)
     if remote:
         require(not target.exists(), "clone destination already exists")
         require(not remote.startswith("-"), "invalid remote")
@@ -114,7 +127,7 @@ def initialize(config, repo, remote=None, branch="main", backend="lexical", mode
         revision(target, branch)
     p.parent.mkdir(parents=True, exist_ok=True)
     data = {"repo": str(target), "branch": branch, "state": str(p.parent / "state"),
-            "embedding": {"backend": backend, "model": model or "lexical-hash-v1", "revision": model_revision or "1"},
+            "embedding": embedding,
             "provider": None, "automatic_merge": False}
     p.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     return data

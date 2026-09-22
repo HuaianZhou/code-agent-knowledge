@@ -37,6 +37,22 @@ class EvaluationTests(unittest.TestCase):
         with self.assertRaises(KnowledgeError):
             retrieval_report(index, index.view(), embedder, k=len(nodes()), require_semantic=False)
 
+    def test_capture_requires_explicit_embedding_and_preserves_pin(self):
+        root = self.root / "semantic-capture"
+        with self.assertRaisesRegex(KnowledgeError, "embedding model"):
+            prepare_capture(root, "agent-model")
+        self.assertFalse(root.exists())
+        pin = "a" * 40
+        prepare_capture(root, "agent-model", "example/model", pin)
+        for case in cases():
+            config = read(root / case["id"] / "workspace" / "config.json")
+            self.assertEqual(config["embedding"], {
+                "backend": "sentence-transformers", "model": "example/model", "revision": pin})
+            self.assertEqual(read(root / case["id"] / "private.json")["embedding"], config["embedding"])
+        with self.assertRaises(KnowledgeError):
+            prepare_reuse(self.root / "invalid", "agent-model", embedding_model="example/model",
+                          embedding_revision="main")
+
     def test_controlled_context_has_shared_entry_and_equal_budget(self):
         index, embedder = self.index()
         contexts, seed = controlled_contexts(index, embedder, 2400)
@@ -50,7 +66,7 @@ class EvaluationTests(unittest.TestCase):
 
     def test_reuse_preparation_and_pending_summary(self):
         root = self.root / "reuse"
-        prepared = prepare_reuse(root, "fixture-model-v1", repeats=2)
+        prepared = prepare_reuse(root, "fixture-model-v1", repeats=2, lexical_diagnostic=True)
         self.assertEqual(len(prepared["run_order"]), 6)
         snapshots = []
         for trial_id in prepared["run_order"]:
@@ -69,11 +85,11 @@ class EvaluationTests(unittest.TestCase):
         self.assertTrue(all(t["status"] == "pending" for t in summary["trials"]))
         self.assertIsNone(summary["adoption_conclusion"])
         with self.assertRaises(KnowledgeError):
-            prepare_reuse(root, "fixture-model-v1")
+            prepare_reuse(root, "fixture-model-v1", lexical_diagnostic=True)
 
     def test_capture_gold_is_not_exported_and_claimed_success_not_trusted(self):
         root = self.root / "capture"
-        prepared = prepare_capture(root, "fixture-model-v1")
+        prepared = prepare_capture(root, "fixture-model-v1", lexical_diagnostic=True)
         self.assertEqual(prepared["cases"], len(cases()))
         for case in cases():
             request = read(root / case["id"] / "input" / "request.json")
@@ -96,7 +112,7 @@ class EvaluationTests(unittest.TestCase):
 
     def test_summary_does_not_accept_self_reported_success(self):
         root = self.root / "reuse"
-        experiment = prepare_reuse(root, "model-v1", repeats=1)
+        experiment = prepare_reuse(root, "model-v1", repeats=1, lexical_diagnostic=True)
         trial = root / experiment["run_order"][0]
         dump(trial / "output" / "result.json", {"model": "model-v1", "success": True})
         dump(trial / "run.json", {"exit_code": 0, "wall_seconds": 1})

@@ -1,0 +1,123 @@
+{
+  "kind": "semantic",
+  "k": 3,
+  "recall_at_k": 1.0,
+  "mrr_at_k": 1.0,
+  "threshold": 0.8,
+  "passed": true,
+  "embedding": {
+    "backend": "sentence-transformers",
+    "chunk_policy": "token-window-mean-v1",
+    "dimensions": 384,
+    "distance": "cosine",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "payload_policy": 1,
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "schema": 1
+  },
+  "knowledge_revision": "1eb374c1b0466f9d0a57ad9ed634f436e2734589",
+  "queries": [
+    {
+      "query": "Can I renumber persisted status values if the restoration appliance is upgraded later?",
+      "target": "kn-retained-format",
+      "returned_ids": [
+        "kn-retained-format",
+        "kn-writer-evolution",
+        "kn-recovery-check"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "Why could old order backups be interpreted incorrectly after a service rollout?",
+      "target": "kn-retained-format",
+      "returned_ids": [
+        "kn-retained-format",
+        "kn-writer-evolution",
+        "kn-recovery-check"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "How do I avoid losing the last diagnostic messages when a process exits?",
+      "target": "kn-logging",
+      "returned_ids": [
+        "kn-logging",
+        "kn-recovery-check",
+        "kn-timeout"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "The final log events disappear when the consumer stops. What must finish first?",
+      "target": "kn-logging",
+      "returned_ids": [
+        "kn-logging",
+        "kn-timeout",
+        "kn-retained-format"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "The bank never answered our request; is sending the charge again safe?",
+      "target": "kn-timeout",
+      "returned_ids": [
+        "kn-timeout",
+        "kn-clock",
+        "kn-recovery-check"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "A response was lost after submitting money. How do we prevent billing twice?",
+      "target": "kn-timeout",
+      "returned_ids": [
+        "kn-timeout",
+        "kn-recovery-check",
+        "kn-clock"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "Two customers have identical object IDs in a shared worker. What belongs in the lookup key?",
+      "target": "kn-cache",
+      "returned_ids": [
+        "kn-cache",
+        "kn-retained-format",
+        "kn-writer-evolution"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "How can we stop one customer's stored results appearing for another customer?",
+      "target": "kn-cache",
+      "returned_ids": [
+        "kn-cache",
+        "kn-timeout",
+        "kn-schema"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "System time jumped backwards and our retry deadline changed. Which timer should we use?",
+      "target": "kn-clock",
+      "returned_ids": [
+        "kn-clock",
+        "kn-timeout",
+        "kn-retained-format"
+      ],
+      "rank": 1
+    },
+    {
+      "query": "When can a field be deleted while older application instances are still serving requests?",
+      "target": "kn-schema",
+      "returned_ids": [
+        "kn-schema",
+        "kn-retained-format",
+        "kn-writer-evolution"
+      ],
+      "rank": 1
+    }
+  ],
+  "fixture_kind": "synthetic",
+  "agent_capture_evaluated": false
+}

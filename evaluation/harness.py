@@ -56,8 +56,18 @@ def fresh(path):
     return path
 
 
-def prepare_capture(output, model):
+def evaluation_embedding(model=None, revision=None, diagnostic=False):
+    if diagnostic:
+        require(model is None and revision is None, "lexical diagnostic cannot specify a semantic model")
+        return {"backend": "lexical", "model": "lexical-hash-v1", "revision": "1"}
+    require(bool(model) and bool(re.fullmatch(r"[0-9a-f]{40}", revision or "")),
+            "supply embedding model and immutable 40-character revision, or explicitly select lexical diagnostic")
+    return {"backend": "sentence-transformers", "model": model, "revision": revision}
+
+
+def prepare_capture(output, model, embedding_model=None, embedding_revision=None, lexical_diagnostic=False):
     require(bool(model), "declare the agent model/version before preparing trials")
+    embedding = evaluation_embedding(embedding_model, embedding_revision, lexical_diagnostic)
     root = fresh(output)
     for case in cases():
         trial = root / case["id"]
@@ -84,7 +94,7 @@ def prepare_capture(output, model):
         base = init_repo(workspace / "knowledge", seed)
         dump(workspace / "config.json", {
             "repo": "/workspace/knowledge", "branch": "main", "state": "/workspace/state",
-            "embedding": {"backend": "lexical", "model": "lexical-hash-v1", "revision": "1"},
+            "embedding": embedding,
             "provider": None, "automatic_merge": False})
         shutil.copytree(ROOT / "knowledge_agent", public / "tool-source" / "knowledge_agent",
                         ignore=shutil.ignore_patterns("__pycache__"))
@@ -107,9 +117,10 @@ def prepare_capture(output, model):
             "result_contract": {"outcome": "zero_qualifying_candidates or proposal", "proposal_branch": "branch if committed, otherwise null"},
             "evidence": "Return raw tool-call trace and actual task-end result; do not infer success from narrative alone."})
         dump(trial / "private.json", {"kind": "capture", "case": case, "base_revision": base,
-                                     "fixture_kind": "synthetic", "model": model,
+                                     "fixture_kind": "synthetic", "model": model, "embedding": embedding,
                                      "tool_revision": git(ROOT, "rev-parse", "HEAD").stdout.strip()})
-    dump(root / "suite.json", {"kind": "capture", "cases": [c["id"] for c in cases()], "status": "prepared_not_run"})
+    dump(root / "suite.json", {"kind": "capture", "cases": [c["id"] for c in cases()],
+                              "embedding": embedding, "status": "prepared_not_run"})
     return {"directory": str(root), "cases": len(cases()), "status": "prepared_not_run"}
 
 
@@ -217,8 +228,10 @@ if __name__ == "__main__":
 '''
 
 
-def prepare_reuse(output, model, repeats=3, seed=42, budget=2400, capture_trial=None):
+def prepare_reuse(output, model, repeats=3, seed=42, budget=2400, capture_trial=None,
+                  embedding_model=None, embedding_revision=None, lexical_diagnostic=False):
     require(bool(model) and repeats > 0, "supply model/version identifier and positive repeat count")
+    embedding = evaluation_embedding(embedding_model, embedding_revision, lexical_diagnostic)
     root = fresh(output)
     provenance = "curated_fixture"
     corpus = nodes()
@@ -236,7 +249,7 @@ def prepare_reuse(output, model, repeats=3, seed=42, budget=2400, capture_trial=
         provenance = "raw_capture"
     repo = root / "evaluator-knowledge"
     knowledge_revision = init_repo(repo, corpus)
-    embedder = Embedder({"backend": "lexical", "model": "lexical-hash-v1", "revision": "1"})
+    embedder = Embedder(embedding)
     index = Index(root / "evaluator-index")
     index.rebuild(repo, "main", embedder)
     contexts, entry = controlled_contexts(index, embedder, budget)
@@ -269,7 +282,7 @@ def prepare_reuse(output, model, repeats=3, seed=42, budget=2400, capture_trial=
     random.Random(seed).shuffle(trials)
     experiment = {"kind": "controlled_reuse", "fixture_kind": "synthetic", "knowledge_provenance": provenance,
                   "capture_source": capture_source, "model": model, "seed": seed, "repeats": repeats,
-                  "context_budget": budget, "retrieval_backend": "lexical", "run_order": trials,
+                  "context_budget": budget, "retrieval_backend": embedding["backend"], "embedding": embedding, "run_order": trials,
                   "pass_criteria": {"behavior": "all grader checks pass", "quality": "independent trace review required",
                                     "adoption": "not established by this small synthetic experiment"},
                   "status": "prepared_not_run",

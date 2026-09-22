@@ -65,6 +65,21 @@ knowledge-agent --config /path/to/client/config.json setup --repo /path/to/knowl
 
 Setup is repeatable and preserves existing configuration. It refuses to overwrite
 an existing repository destination; use `initialize` to adopt an existing repo.
+
+For semantic search during capture, retrieval and duplicate review, install the
+embedding dependency and select a pinned model when creating the store:
+
+```powershell
+.\install.ps1 -Backend sentence-transformers -Model sentence-transformers/all-MiniLM-L6-v2 -ModelRevision 1110a243fdf4706b3f48f1d95db1a4f5529b4d41
+```
+
+The equivalent CLI is `setup --backend sentence-transformers --model MODEL --model-revision COMMIT`.
+The basic installation still uses lexical hashing and does not provide semantic
+retrieval. Neither path silently substitutes lexical search if a semantic model fails.
+For an existing store, install `.[semantic]`, explicitly update the `embedding`
+object in its config, and run `rebuild-index --force`; repeated setup never changes
+an existing store's model. SQLite stores and compares embeddings; the local model
+generates them. The first semantic use downloads the model.
 New repositories use the local Git identity `Knowledge Agent <knowledge-agent@localhost>`.
 Supply `setup --name "Your Name" --email "your@email"` to choose an author at creation.
 This does not create an account, configure a remote, install skills into an agent,

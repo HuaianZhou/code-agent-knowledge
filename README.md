@@ -280,6 +280,9 @@ and [coverage map](docs/evaluation-coverage.md). The evaluation harness includes
 capture/maintenance conversations, paraphrase retrieval metrics, Docker-isolated
 agent runs, artifact-based scoring, and paired no-knowledge/flat/graph experiments.
 Prepared trials are not reported as completed agent evaluations.
+Actual isolated Astra capture/maintenance outcomes, proposed nodes, review criteria
+and semantic-retrieval measurements are recorded in the
+[agent evaluation results](docs/evaluation-results.md).
 No claim of measured agent productivity or automatic semantic deduplication is made.
 
 The actual Kiro draft was not supplied. Company-approved embedding model, remote and

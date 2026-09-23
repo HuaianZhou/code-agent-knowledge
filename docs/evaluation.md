@@ -67,6 +67,11 @@ Run the actual agent only in a container with the restricted mounts below. A fre
 directory alone is not isolation. The runner never mounts private.json, evaluator
 source, other trials, the Docker socket, or the host home. No host-run fallback
 exists. `run` refuses to start without Docker, and each trial can run only once.
+Stop a batch on unsuccessful agent execution and inspect the raw trace. A service
+usage-limit error is an infrastructure-blocked attempt, not evidence that the
+skill failed its semantic criteria. After recovery, prepare fresh trial directories
+and keep the original attempt records. Do not silently combine different agent
+models in one set of results.
 
 Build `evaluation/Dockerfile` with `--build-arg EMBEDDING_MODEL=...` and
 `--build-arg EMBEDDING_REVISION=...`, using the same pinned values as the trials
@@ -76,6 +81,15 @@ your chosen coding-agent CLI. It includes Python, Git, YAML/sqlite-vec dependenc
 and a generic adapter; **it does not include an LLM or coding-agent installation**.
 The final image must be built/pulled explicitly; runs resolve and record its local
 immutable image ID and never silently pull a new image.
+
+For Codex, build the base with tag `knowledge-eval-base:local`, then build
+`evaluation/Dockerfile.codex` as `knowledge-eval-codex:local`. The latter pins the
+CLI version through `CODEX_VERSION`. If using an existing ChatGPT sign-in, pass
+`--codex-auth PATH_TO_AUTH_JSON` to `run`: only that file is mounted read-only.
+The adapter copies it into its temporary home, which disappears when the container
+exits. It never mounts the entire host home or passes authentication to the grader.
+Use `--network bridge` for the model service. Never put credentials in the image,
+trial request, checked-in env file, or public results.
 
 The adapter accepts these environment variables via an evaluator-owned env file:
 

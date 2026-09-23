@@ -80,6 +80,12 @@ class EvaluationTests(unittest.TestCase):
             grade_cmd = container_command(trial, "fixture-image", grading=True)
             self.assertNotIn(str(trial / "input"), " ".join(grade_cmd))
             self.assertIn("--network=none", grade_cmd)
+            auth = self.root / "test-auth.json"
+            auth.write_text("{}", encoding="utf-8")
+            with_auth = container_command(trial, "fixture-image", codex_auth=auth)
+            self.assertIn(f"type=bind,source={auth.resolve()},target=/run/codex-auth.json,readonly", with_auth)
+            self.assertNotIn("/run/codex-auth.json", " ".join(container_command(
+                trial, "fixture-image", grading=True, codex_auth=auth)))
         self.assertTrue(all(s == snapshots[0] for s in snapshots))
         summary = summarize_reuse(root)
         self.assertTrue(all(t["status"] == "pending" for t in summary["trials"]))

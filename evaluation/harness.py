@@ -38,6 +38,8 @@ def init_repo(path, content):
     git(path, "init", "-b", "main")
     git(path, "config", "user.name", "Evaluation Fixture")
     git(path, "config", "user.email", "fixture@example.invalid")
+    # Preserve the same bytes when Windows-created fixtures are mounted in Linux.
+    git(path, "config", "core.autocrlf", "false")
     if not (path / "README.md").exists():
         (path / "README.md").write_text("Synthetic evaluation repository.\n", encoding="utf-8")
     for n in content.values():
@@ -73,6 +75,7 @@ def prepare_capture(output, model, embedding_model=None, embedding_revision=None
         trial = root / case["id"]
         public, workspace = trial / "input", trial / "workspace"
         public.mkdir(parents=True)
+        (public / "applicable-skills").mkdir()
         (trial / "output").mkdir()
         write_project(workspace / "project")
         code_base = init_repo(workspace / "project", {})
@@ -124,7 +127,7 @@ def prepare_capture(output, model, embedding_model=None, embedding_revision=None
     return {"directory": str(root), "cases": len(cases()), "status": "prepared_not_run"}
 
 
-def container_command(trial, image, *, grading=False, network="none", env_file=None):
+def container_command(trial, image, *, grading=False, network="none", env_file=None, codex_auth=None):
     trial = Path(trial).resolve()
     require(bool(image) and not image.startswith("-"), "provide an agent/grade image")
     require(network in ("none", "bridge"), "network must be none or bridge")
@@ -140,13 +143,17 @@ def container_command(trial, image, *, grading=False, network="none", env_file=N
         cmd += ["--mount", f"type=bind,source={source},target={destination}" + (",readonly" if readonly else "")]
     if grading:
         return cmd + ["--entrypoint", "python", image, "-B", "/grading/check.py"]
+    if codex_auth:
+        auth = Path(codex_auth).resolve()
+        require(auth.is_file() and not auth.is_symlink() and "," not in str(auth), "invalid Codex auth file")
+        cmd += ["--mount", f"type=bind,source={auth},target=/run/codex-auth.json,readonly"]
     if env_file:
         cmd += ["--env-file", str(Path(env_file).resolve())]
     return cmd + ["--workdir", "/workspace/project", "--env", "PYTHONPATH=/input/tool-source", image,
                   "--request", "/input/request.json", "--output", "/output/result.json"]
 
 
-def run_trial(trial, image, timeout=600, network="none", env_file=None, grading=False):
+def run_trial(trial, image, timeout=600, network="none", env_file=None, grading=False, codex_auth=None):
     require(shutil.which("docker") is not None, "Docker is required for isolated agent runs; no host fallback is allowed")
     require(timeout > 0, "timeout must be positive")
     trial = Path(trial).resolve()
@@ -156,7 +163,7 @@ def run_trial(trial, image, timeout=600, network="none", env_file=None, grading=
     inspect = subprocess.run(["docker", "image", "inspect", "--format={{.Id}}", image], capture_output=True, text=True)
     require(inspect.returncode == 0, "image is not available locally; build/pull it explicitly first")
     image_id = inspect.stdout.strip()
-    cmd = container_command(trial, image_id, grading=grading, network=network, env_file=env_file)
+    cmd = container_command(trial, image_id, grading=grading, network=network, env_file=env_file, codex_auth=codex_auth)
     container_name = "knowledge-eval-" + uuid.uuid4().hex
     cmd[2:2] = ["--name", container_name]
     started = time.monotonic()

@@ -1,0 +1,832 @@
+{
+  "date": "2026-09-22",
+  "fixture_kind": "synthetic",
+  "agent_model": "gpt-6-astra",
+  "codex_cli": "0.155.0-alpha.16",
+  "embedding": {
+    "backend": "sentence-transformers",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  },
+  "passed": 8,
+  "cases": [
+    {
+      "case": "cheap_lookup",
+      "attempt": "capture-agent-20260922",
+      "status": "passed",
+      "trace_sha256": "d8ac25fa3b8ebfa29fe9d4f38f910840d8439ce93ab34b59b49582218f35e43a",
+      "usage": {
+        "input_tokens": 87201,
+        "cached_input_tokens": 79232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1035,
+        "reasoning_output_tokens": 25
+      },
+      "completed_shell_commands": 8,
+      "score": {
+        "case": "cheap_lookup",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "agent-trace.txt: read writer.py and git show of supplied code revision; rejected signature as cheaply recoverable; executed task-end empty manifest."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Source inspection confirms stream, order_id and state; no new factual claim was persisted."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "No survivor, no identity created. Skill permits skipping search when screening rejects all candidates."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No node or relationship created; appropriate for a rejected signature fact."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limited to supplied task and function; no accepted-node changes. Agent disclosed missing applicable-skills directory."
+          }
+        },
+        "rubric": "Reject a directly recoverable signature, even though it is accurate.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 50.75,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "skill_overlap",
+      "attempt": "capture-agent-20260922",
+      "status": "passed",
+      "trace_sha256": "6f9e747db5b1b4d7021d19ed1323a97ee5781a636b8d2d91a5388c8a14984d7a",
+      "usage": {
+        "input_tokens": 88124,
+        "cached_input_tokens": 80000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 900,
+        "reasoning_output_tokens": 13
+      },
+      "completed_shell_commands": 7,
+      "score": {
+        "case": "skill_overlap",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Trace item_4 reads encoding-verification/SKILL.md; its rule fully covers the candidate. item_7 executes task-end with an empty manifest."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Agent distinguishes the supplied claim of a test pass from observed execution and does not invent verification."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Agent checks the existing applicable skill and rejects duplicate instruction; no knowledge-node identity is created."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No surviving candidate, so no edges are warranted or added."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limits the conclusion to the encoding-verification instruction; rejects the transient test-pass report."
+          }
+        },
+        "rubric": "The provided skill already fully covers this verification instruction; reject duplication.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 48.90700000000004,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "implicit_constraint",
+      "attempt": "capture-agent-20260922",
+      "status": "passed",
+      "trace_sha256": "a3a45dd324f114d97273bdc14620d5f8e2c6c602a760ff89f7a7486f2491a0b9",
+      "usage": {
+        "input_tokens": 152007,
+        "cached_input_tokens": 140800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1895,
+        "reasoning_output_tokens": 9
+      },
+      "completed_shell_commands": 13,
+      "score": {
+        "case": "implicit_constraint",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [
+          "kn-orders-retained-journal-contract"
+        ],
+        "raw_proposals": [
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-orders-retained-journal-contract",
+              "title": "Preserve order journal meanings for independently deployed recovery",
+              "type": "constraint",
+              "tags": [
+                "orders",
+                "journals",
+                "recovery",
+                "compatibility"
+              ],
+              "weight": 0.9,
+              "status": "active",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "Adding order states or changing persisted order journal formats consumed by the disaster-recovery appliance",
+                  "Appliance remains separately deployed and reads journals retained for seven years"
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "affected_code",
+                  "verified_commit": "140dc94346c22c0172f087b54e53728a05d0660d"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "140dc94346c22c0172f087b54e53728a05d0660d"
+                }
+              ],
+              "relations": [],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "/input/request.json conversation[0], user correction supplied for this extraction"
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders@140dc94346c22c0172f087b54e53728a05d0660d writer.py and recovery.py"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "When adding order states or changing persisted records, preserve existing numeric\nmeanings: 0 is NEW, 1 is PAID, and 2 is CANCELLED. The user reports that the\ndisaster-recovery appliance is deployed separately, reads numeric journals retained\nfor seven years, and cannot be updated with this service.\n\nDo not renumber or reuse existing values. Before introducing a new record format,\nprepare a migration and recovery rollout plan covering retained records and the\nseparately deployed appliance. Assess appliance support for new states before\nemitting them; preserving old values alone does not establish support for new ones.\nA service-local writer/reader change or passing local roundtrip test cannot establish\nthat the independently deployed reader can recover the retained history.\n\nDirect inspection at the anchored commit confirms that writer.py serializes integer\nstates and recovery.py maps 0, 1, and 2 to their current meanings. These code facts\nsupport the affected surface, not the deployment or retention policy. The latter\nis human-reported; no appliance deployment evidence was supplied. The assistant's\nstatement that it kept the meanings is not evidence of a code change: supplied base\nand head are identical. No appliance tests were run.\n\nReassess this constraint when authoritative deployment/retention guidance changes,\nor a completed migration and independently coordinated recovery rollout establishes\na new supported contract. A local reader update alone does not invalidate it.",
+            "path": "nodes/kn-orders-retained-journal-contract.md",
+            "warning": null
+          }
+        ],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Read writer/recovery, separated directly visible numeric mapping from user-reported independent deployment and retention policy; wrote one actionable constraint through task-end."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Node sources include supplied human correction and inspected code commit; evidence_state reported with empty verification. Body explicitly says deployment policy was not tested and supplied code base/head were identical."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Trace performs semantic searches and anchor lookups against pinned empty accepted snapshot before choosing create; no equivalent node exists."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "Empty initial store has no existing target to link; no invented references."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Node scopes to retained numeric journals and independent appliance; provides migration/rollout actions and explicit reassessment conditions."
+          }
+        },
+        "rubric": "Preserve the human-reported deployment constraint, its concrete action, source and invalidation conditions. Do not claim that human guidance was experimentally verified.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 105.18799999999999,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "paraphrase",
+      "attempt": "capture-astra-retry-20260922",
+      "status": "passed",
+      "trace_sha256": "10ed4194ec03ad711d603efccc669e0b6344b18b9e05e9892ef969168bf3ca89",
+      "usage": {
+        "input_tokens": 132744,
+        "cached_input_tokens": 121600,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 966,
+        "reasoning_output_tokens": 18
+      },
+      "completed_shell_commands": 13,
+      "score": {
+        "case": "paraphrase",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "After screening the deployment constraint, agent searched and compared its meaning rather than treating different wording as novelty."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "No new fact or unsupported verification written; reads actual supplied code and existing node."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Trace searches by condition/action, reads kn-retained-format and graph context, then executes task-end zero-write because no new scope or evidence warrants an update."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "Reuses existing claim conceptually with no new candidate requiring an edge; preserves existing node and relations."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Comparison accounts for independent appliance, archived numeric values and coordinated migration; the supplied paraphrase adds no distinct condition."
+          }
+        },
+        "rubric": "Reuse or enrich the existing scoped node despite different wording. Do not create a second ID for the same claim.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 61.40599999999995,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "uncertain_inference",
+      "attempt": "capture-astra-retry-20260922",
+      "status": "passed",
+      "trace_sha256": "af06524f0fbbbd9672619e8a41c110220898d51b8229449b39f101b377566cb4",
+      "usage": {
+        "input_tokens": 133205,
+        "cached_input_tokens": 121728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2239,
+        "reasoning_output_tokens": 26
+      },
+      "completed_shell_commands": 14,
+      "score": {
+        "case": "uncertain_inference",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [
+          "kn-orders-recovery-version-inventory"
+        ],
+        "raw_proposals": [
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-orders-recovery-version-inventory",
+              "title": "Inventory customer recovery decoders before renumbering persisted order states",
+              "type": "verification_rule",
+              "tags": [
+                "orders",
+                "recovery",
+                "compatibility"
+              ],
+              "weight": 0.6,
+              "status": "needs_review",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "Changes to persisted order-state numeric values while customer recovery decoder versions remain unconfirmed"
+                ]
+              },
+              "evidence_state": "inferred",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "affected_code",
+                  "verified_commit": "9f4ab367f79b7ed515eb74e2a44d20d7b144f0a2"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "9f4ab367f79b7ed515eb74e2a44d20d7b144f0a2"
+                },
+                {
+                  "repo": "orders",
+                  "path": "test_public.py",
+                  "role": "evidence",
+                  "verified_commit": "9f4ab367f79b7ed515eb74e2a44d20d7b144f0a2"
+                }
+              ],
+              "relations": [],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "Supplied evaluation conversation, user turn; a customer recovery job may use an older decoder and deployment inventory is unavailable."
+                },
+                {
+                  "kind": "task",
+                  "reference": "Supplied evaluation conversation, assistant turn; suspected retained-record misinterpretation, with deployed versions explicitly unconfirmed."
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders@9f4ab367f79b7ed515eb74e2a44d20d7b144f0a2"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "Before changing persisted order-state numbers, obtain the customer's recovery-version inventory and test those readers against representative retained records and the proposed encoding. Keep existing values pending that check; use its results to decide whether a migration or reader coordination is needed.\n\nThe user reports only that a customer recovery job *may* use an older decoder. Neither deployed versions nor an actual incompatibility has been established. The assistant's misinterpretation concern is a hypothesis, not a confirmed incident or deployment contract.\n\nInspection at the anchored commit shows writer.py stores int(state), with NEW=0, PAID=1 and CANCELLED=2; recovery.py maps these integers directly to meanings. Reassigning an existing number could therefore change its interpretation for a reader using a different mapping. This supports the mechanism behind the concern, but does not prove any customer runs that reader. test_public.py checks a current PAID round trip only; its source supplies no historical-reader coverage. No tests or deployment checks were executed during extraction.\n\nThis rule applies when considering encoding changes under the reported customer-version uncertainty. Reassess its scope once inventory and compatibility tests establish the supported reader set. Evidence that all relevant readers and retained records have migrated, or that a versioned decoding contract isolates the change, can remove this provisional gate. A code commit alone cannot resolve deployment uncertainty.",
+            "path": "nodes/kn-orders-recovery-version-inventory.md",
+            "warning": "Knowledge requires review"
+          }
+        ],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Candidate is actionable specifically under unconfirmed customer reader versions; instruction is to obtain inventory and test historical readers before encoding changes."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Node explicitly labels the mechanism as inference, uses evidence_state inferred and status needs_review, and says no deployment or compatibility tests were executed."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Trace performs semantic searches and anchor lookups in the empty accepted store before creating kn-orders-recovery-version-inventory."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No existing target in seed corpus; no fabricated dependency links."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limited to numeric-state changes under customer deployment uncertainty; inventory, compatibility tests and versioned migration are explicit reassessment conditions."
+          }
+        },
+        "rubric": "Zero writes or a scoped, actionable uncertain node is acceptable. Never promote the hypothesis to verified advice.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 110.9849999999999,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "zero_value",
+      "attempt": "capture-astra-retry-20260922",
+      "status": "passed",
+      "trace_sha256": "cece76452f894bfb6deae7fcb23e885bafaba49eee1b2aba187a49a8fb909da9",
+      "usage": {
+        "input_tokens": 89001,
+        "cached_input_tokens": 80640,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 947,
+        "reasoning_output_tokens": 30
+      },
+      "completed_shell_commands": 7,
+      "score": {
+        "case": "zero_value",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Rejects spelling correction as cheaply recoverable and lacking a reusable behavioral lesson; invokes actual task-end with empty nodes/admission."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Reads supplied project files and skill; does not turn the conversation task summary into a verified reusable claim."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "No surviving knowledge candidate; no duplicate/new identity created."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No relationships warranted for a spelling-only task; no graph changes."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Keeps extraction scoped to supplied conversation; no invented future constraint or forced quota."
+          }
+        },
+        "rubric": "A completed task must not force a node.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 50.53099999999995,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "shared_constraint",
+      "attempt": "capture-astra-retry-20260922",
+      "status": "passed",
+      "trace_sha256": "a0aedb52ce960b61d5ccde90f20b5e7aab5399792e194372a1be4f0f352bea0d",
+      "usage": {
+        "input_tokens": 194129,
+        "cached_input_tokens": 173824,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2095,
+        "reasoning_output_tokens": 14
+      },
+      "completed_shell_commands": 17,
+      "score": {
+        "case": "shared_constraint",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [
+          "kn-recovery-export-format"
+        ],
+        "raw_proposals": [
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-recovery-export-format",
+              "title": "Recovery exports identify their format for decoder selection",
+              "type": "decision",
+              "tags": [
+                "recovery",
+                "export",
+                "compatibility"
+              ],
+              "weight": 0.7,
+              "status": "active",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "Synthetic evaluation; designing or changing recovery exports of retained order records."
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "affected_code",
+                  "verified_commit": "5af9accf256dbb118e6006aa4532e44dcde7c6d7"
+                }
+              ],
+              "relations": [
+                {
+                  "type": "constrained_by",
+                  "target": "kn-retained-format"
+                }
+              ],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "Supplied evaluation conversation, user instruction requiring recovery export format identification and compatibility with the recorded independent appliance constraint."
+                },
+                {
+                  "kind": "task",
+                  "reference": "Supplied evaluation conversation, assistant reports adding an explicit format marker to the proposed export design and reusing the retained-format rule."
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders@5af9accf256dbb118e6006aa4532e44dcde7c6d7; inspected writer.py, recovery.py and test_public.py for current behavior only."
+                }
+              ],
+              "verification": {}
+            },
+            "body": "When designing or changing recovery exports of retained order records, include an explicit format identifier in export metadata so operators can select the matching decoder. Check retained-record compatibility against kn-retained-format, the same shared constraint used by the writer decision. Follow that constraint when assessing reader compatibility and any migration; this decision does not define a second retained-format rule.\n\nThe supplied user instruction establishes the metadata requirement. The assistant reports incorporating a marker into a proposed design. This is a reported design decision: inspection of the unchanged project revision shows a JSON-lines writer and numeric-state recovery reader, but no export metadata implementation. The public test covers only a current writer/reader round trip and does not establish historical-record or independent-appliance compatibility. No implementation, deployment, or compatibility test success is claimed.\n\nFor future export work, define the format identifier and its decoder mapping, include the identifier in export metadata, and validate supported retained records against the applicable independent reader constraint. The marker syntax and supported decoder versions remain unspecified; a marker alone does not establish compatibility.\n\nReassess this decision if the export contract or decoder-selection workflow changes. Reassess its dependency when the retained-format constraint is revised or retired; do not assume an export or writer rollout updates independent readers or retained data.",
+            "path": "nodes/kn-recovery-export-format.md",
+            "warning": null
+          }
+        ],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Retains the human-specified export metadata/decoder-selection decision, which is absent from current implementation and actionable for future export changes."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Node evidence_state reported, empty verification; body explicitly distinguishes proposed design from unimplemented code and unrun compatibility tests."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Trace semantically searches, reads existing kn-retained-format and expands kn-writer-evolution context; creates only the distinct export decision."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "New kn-recovery-export-format has constrained_by -> kn-retained-format, reusing the same target as writer decision. No copied constraint node."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limited to recovery export design and retained records; marker syntax/version is intentionally unspecified and reassessment follows contract or shared-constraint change."
+          }
+        },
+        "rubric": "Capture the export decision only if justified; reuse B's existing ID through a meaningful dependency relationship and retain the reported/design evidence state.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 102.35899999999992,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "changed_conditions",
+      "attempt": "capture-astra-retry-20260922",
+      "status": "passed",
+      "trace_sha256": "3338f27dce6aef20351f36473a5b9f52207a23a1ec78cba3164e48139b8af808",
+      "usage": {
+        "input_tokens": 285085,
+        "cached_input_tokens": 249728,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 3382,
+        "reasoning_output_tokens": 30
+      },
+      "completed_shell_commands": 16,
+      "score": {
+        "case": "changed_conditions",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [
+          "kn-recovery-check",
+          "kn-retained-format",
+          "kn-writer-evolution"
+        ],
+        "raw_proposals": [
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-recovery-check",
+              "title": "Replay verification for export changes",
+              "type": "verification_rule",
+              "tags": [
+                "fixture"
+              ],
+              "weight": 0.8,
+              "status": "active",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "synthetic evaluation",
+                  "Supported v2 readers and retained named-state archives per operations report; deployment not independently verified"
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "affected_code",
+                  "verified_commit": "3e575b7d24306b1b2364dd834f39888158d5c054"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "3e575b7d24306b1b2364dd834f39888158d5c054"
+                }
+              ],
+              "relations": [
+                {
+                  "type": "related_to",
+                  "target": "kn-retained-format"
+                }
+              ],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "synthetic operations guidance for evaluation"
+                },
+                {
+                  "kind": "human",
+                  "reference": "Operations correction supplied in evaluation conversation: all retained archives migrated to named states; all supported recovery appliances moved to v2; no v1 numeric journals remain in the supported environment."
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders a0b986024caa543683735e9a4ca08920a198a498..3e575b7d24306b1b2364dd834f39888158d5c054: inspected writer.py and recovery.py"
+                },
+                {
+                  "kind": "test",
+                  "reference": "orders 3e575b7d24306b1b2364dd834f39888158d5c054: python -m unittest discover -v; one PAID round-trip test passed"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "For export and replay changes, test retained journals against supported recovery readers. Verify compatibility before rollout; do not infer deployment from a code merge. Retain this rule after the format migration.\n\nFor the supported environment in the operations correction, the test matrix is retained migrated named-state archives and supported v2 appliances. Operations reports that all archives were migrated, all supported appliances moved to v2, and no v1 numeric journals remain. Do not mandate unsupported v1 numeric journals as the current compatibility baseline. Validate representative retained migrated records against supported readers; the current round-trip test alone does not cover this matrix.\n\nHistorically the retained numeric-format constraint motivated testing archives against independently deployed readers. Preserve that provenance via related_to, replacing depends_on: the verification rule remains applicable after the old numeric constraint ends. Reassess the matrix if v1 archives/readers return to scope.\n\nEvidence boundary: Independently inspected orders code at a0b986024caa543683735e9a4ca08920a198a498 and 3e575b7d24306b1b2364dd834f39888158d5c054: v1 wrote numeric states and decoded 0/1/2; v2 writes named states with version 2 and replay returns the stored state. The single current PAID round-trip test passed via python -m unittest discover -v at the head. Neither code nor this test verifies deployed appliance versions or archive migration completeness; no inventories, migration logs, or retained archive samples were supplied. Deployment completion remains reported, not independently verified.",
+            "path": "nodes/kn-recovery-check.md",
+            "warning": null
+          },
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-retained-format",
+              "title": "Stable ordinals across independent deployments",
+              "type": "constraint",
+              "tags": [
+                "fixture"
+              ],
+              "weight": 0.95,
+              "status": "archived",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "synthetic evaluation",
+                  "Historical v1 unversioned journals; retired from current supported scope on reported complete v2 migration"
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "evidence",
+                  "verified_commit": "a0b986024caa543683735e9a4ca08920a198a498"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "a0b986024caa543683735e9a4ca08920a198a498"
+                }
+              ],
+              "relations": [],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "synthetic operations guidance for evaluation"
+                },
+                {
+                  "kind": "human",
+                  "reference": "Operations correction supplied in evaluation conversation: all retained archives migrated to named states; all supported recovery appliances moved to v2; no v1 numeric journals remain in the supported environment."
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders a0b986024caa543683735e9a4ca08920a198a498..3e575b7d24306b1b2364dd834f39888158d5c054: inspected writer.py and recovery.py"
+                },
+                {
+                  "kind": "test",
+                  "reference": "orders 3e575b7d24306b1b2364dd834f39888158d5c054: python -m unittest discover -v; one PAID round-trip test passed"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "Historical constraint for v1 unversioned retained journals: preserve NEW=0, PAID=1 and CANCELLED=2 when adding states. Original operations guidance said a separately deployed recovery appliance reads archives for seven years; a writer rollout does not update it or migrate old data. Coordinate migrations and reader deployment before changing numeric meanings. The stated reassessment condition was that every supported reader and retained archive uses a versioned migrated format.\n\nArchive this constraint as current advice for the supported environment on the basis of the new operations report: all retained archives have migrated to named states, all supported recovery appliances have moved to v2, and no v1 numeric journals remain. This is reported deployment evidence, not a conclusion drawn from the v2 code merge. Stable numeric ordinals no longer constrain that reported supported environment. Preserve the original rationale for historical investigations or reintroduction of v1 data/readers; reassess compatibility explicitly if that scope changes.\n\nEvidence boundary: Independently inspected orders code at a0b986024caa543683735e9a4ca08920a198a498 and 3e575b7d24306b1b2364dd834f39888158d5c054: v1 wrote numeric states and decoded 0/1/2; v2 writes named states with version 2 and replay returns the stored state. The single current PAID round-trip test passed via python -m unittest discover -v at the head. Neither code nor this test verifies deployed appliance versions or archive migration completeness; no inventories, migration logs, or retained archive samples were supplied. Deployment completion remains reported, not independently verified.",
+            "path": "nodes/kn-retained-format.md",
+            "warning": null
+          },
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-writer-evolution",
+              "title": "Order lifecycle feature implementation",
+              "type": "decision",
+              "tags": [
+                "fixture"
+              ],
+              "weight": 0.7,
+              "status": "active",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "synthetic evaluation",
+                  "Supported v2 readers and retained named-state archives per operations report; deployment not independently verified"
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "affected_code",
+                  "verified_commit": "3e575b7d24306b1b2364dd834f39888158d5c054"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "3e575b7d24306b1b2364dd834f39888158d5c054"
+                }
+              ],
+              "relations": [
+                {
+                  "type": "related_to",
+                  "target": "kn-retained-format"
+                }
+              ],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "synthetic operations guidance for evaluation"
+                },
+                {
+                  "kind": "human",
+                  "reference": "Operations correction supplied in evaluation conversation: all retained archives migrated to named states; all supported recovery appliances moved to v2; no v1 numeric journals remain in the supported environment."
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders a0b986024caa543683735e9a4ca08920a198a498..3e575b7d24306b1b2364dd834f39888158d5c054: inspected writer.py and recovery.py"
+                },
+                {
+                  "kind": "test",
+                  "reference": "orders 3e575b7d24306b1b2364dd834f39888158d5c054: python -m unittest discover -v; one PAID round-trip test passed"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "For lifecycle changes in the supported v2 environment described by operations, choose a named state and verify export/replay with supported v2 readers and retained migrated records. Do not carry forward numeric ordinal selection as a current requirement: operations reports every retained archive migrated to named states, every supported appliance moved to v2, and no supported v1 numeric journals remaining. This deployment premise is reported, not independently verified.\n\nHistorical decision: choose numeric representation under kn-retained-format and test current and historical records. That decision protected long-retained unversioned journals read by independently deployed appliances. The historical link is now related_to rather than constrained_by because the reported v1 condition has ended. If numeric archives or v1 readers re-enter scope, reassess that constraint before rollout. Current code/test success does not establish deployed compatibility.\n\nEvidence boundary: Independently inspected orders code at a0b986024caa543683735e9a4ca08920a198a498 and 3e575b7d24306b1b2364dd834f39888158d5c054: v1 wrote numeric states and decoded 0/1/2; v2 writes named states with version 2 and replay returns the stored state. The single current PAID round-trip test passed via python -m unittest discover -v at the head. Neither code nor this test verifies deployed appliance versions or archive migration completeness; no inventories, migration logs, or retained archive samples were supplied. Deployment completion remains reported, not independently verified.",
+            "path": "nodes/kn-writer-evolution.md",
+            "warning": null
+          }
+        ],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Inspected actual v1/v2 code diff, maintenance/impact output and all three affected nodes; ran the public test; prepared explicit updates rather than deleting history."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "All three nodes remain reported with empty verification. Sources record code inspection and one passing PAID test, while bodies explicitly say archive migration/appliance deployment were not independently verified."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Preserves all three stable IDs and original sources; no replacement duplicate identities. Existing nodes updated through a committed proposal, accepted main untouched."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "Retains two dependent nodes as active; changes old constrained_by/depends_on links to historical related_to after reevaluating their meaning, preserving provenance without treating dependents as false."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Archives numeric constraint as current advice only for reported migrated supported environment; keeps historical rationale and explicit reassessment if v1 data/readers return. Active guidance applies to v2 named states."
+          }
+        },
+        "rubric": "Inspect the real code diff plus reported deployment change. Revise/supersede the old constraint, consider dependent decisions, and prevent unqualified continued use of v1 advice. Do not delete history or automatically treat all dependents as false.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 149.81299999999987,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    }
+  ],
+  "review_method": "Separate Codex evaluator reviewed traces and nodes against predefined rubrics; same model family, not blind human review.",
+  "attempt_history": "First three cases completed initially. Usage limit interrupted paraphrase and blocked four more; original records retained. User reset usage, then five cases ran in fresh workspaces. Sol readiness/aborted suite is excluded at user request.",
+  "limitations": [
+    "One successful attempt per case; synthetic project, not demonstrated real-project adoption.",
+    "Retry fixtures have empty skills directory and cross-platform Git line-ending setup fixed; substantive conversations/code/expected outcomes unchanged.",
+    "Agent model is a named service alias, not an immutable model snapshot.",
+    "Proposals were not accepted into main."
+  ]
+}

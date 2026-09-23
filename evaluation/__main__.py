@@ -36,6 +36,7 @@ def main(argv=None):
     run.add_argument("--timeout", type=int, default=600)
     run.add_argument("--network", choices=("none", "bridge"), default="none")
     run.add_argument("--env-file")
+    run.add_argument("--codex-auth", help="Mount only a Codex auth.json read-only; never mount the host home")
     run.add_argument("--grade", action="store_true")
     score = sub.add_parser("score-capture")
     score.add_argument("trial")
@@ -53,7 +54,7 @@ def main(argv=None):
             result = prepare_reuse(args.output, args.model, args.repeats, args.seed, args.context_budget, args.capture_trial,
                                    args.embedding_model, args.embedding_revision, args.lexical_diagnostic)
         elif args.command == "run":
-            result = run_trial(args.trial, args.image, args.timeout, args.network, args.env_file, args.grade)
+            result = run_trial(args.trial, args.image, args.timeout, args.network, args.env_file, args.grade, args.codex_auth)
         elif args.command == "score-capture":
             result = score_capture(args.trial, args.scorecard)
         else:

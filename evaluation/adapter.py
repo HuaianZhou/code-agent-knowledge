@@ -7,6 +7,7 @@ traces. Install that agent in your own image derived from evaluation/Dockerfile.
 import argparse
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import time
@@ -29,6 +30,12 @@ def main():
     prompt = "Perform this evaluation task using the available files and tools.\n" + json.dumps(request, indent=2)
     argv = [arg.replace("{prompt}", prompt) for arg in command]
     Path("/tmp/agent-home").mkdir(exist_ok=True)
+    auth = Path("/run/codex-auth.json")
+    if auth.exists():
+        private_home = Path("/tmp/agent-home/.codex")
+        private_home.mkdir(mode=0o700, exist_ok=True)
+        shutil.copyfile(auth, private_home / "auth.json")
+        (private_home / "auth.json").chmod(0o600)
     # Bind mounts can retain the host owner's UID. Trust only the two fixture
     # repositories, and only in this container process tree.
     agent_env = {**os.environ, "HOME": "/tmp/agent-home", "GIT_CONFIG_COUNT": "2",

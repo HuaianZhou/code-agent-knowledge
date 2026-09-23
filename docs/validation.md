@@ -63,3 +63,51 @@ All 46 automated tool/harness checks passed. The two new checks verify semantic
 setup configuration preservation and mandatory explicit embedding selection in
 capture preparation. Fresh eight-case capture and nine-trial reuse suites use
 the same pinned semantic model. They remain prepared, not agent-executed.
+
+## Actual capture/maintenance agent runs, 2026-09-22
+
+Executed all eight scenarios using Codex CLI `0.155.0-alpha.16`, model alias
+`gpt-6-astra`, and the pinned MiniLM embedding model in isolated Docker containers.
+All eight passed artifact checks and a separate Codex evaluator's trace/node review.
+This is not a blind human review or evidence of real-project adoption. The
+[results and per-criterion reviews](results/capture-astra-20260922.json) include
+actual proposed nodes, native token usage, command counts, image IDs and trace hashes.
+
+Observed outcomes: cheap lookup, skill overlap, paraphrase and zero-value tasks
+produced zero writes. The implicit constraint produced a reported constraint;
+uncertain inference produced an inferred, needs-review verification rule; the export
+decision reused the existing constraint through an explicit edge. Maintenance archived
+the historical numeric constraint and revised two dependent nodes while retaining
+their history and distinguishing reported deployment evidence from the observed test.
+All contributions remain proposals; none was accepted into main.
+
+The initial run completed three cases before the CLI reported a usage limit.
+The [initial attempt record](results/capture-agent-20260922.json) retains those
+quota-blocked attempts. After the user reset usage, the five remaining cases ran
+in fresh workspaces. An alternative-model readiness check and interrupted Sol run
+are excluded. Two fixture issues found during execution (empty skills directory and
+Windows/Linux line-ending differences) were corrected for retry preparation without
+changing scenario conversations, substantive code, or expected outcomes.
+
+The seven harness regression tests passed after adding narrow read-only Codex
+authentication mounting; the grader receives no authentication file. Docker images
+cache the embedding model and use CPU Torch. Local raw traces and Git proposals are
+retained under `.demo/capture-agent-20260922` and
+`.demo/capture-astra-retry-20260922`.
+
+## Actual coding reuse runs, 2026-09-23
+
+All nine Astra trials completed: three without knowledge, three with semantic
+retrieval, and three with semantic retrieval plus graph expansion. Each passed
+the separate hidden grader for numeric compatibility, historical replay, and the
+new REFUNDED round trip. One successful original trial was retained; eight fresh
+trials completed after the usage reset, with matching starting file hashes and
+context contents. Raw artifacts remain in `.demo/reuse-agent-20260922` and
+`.demo/reuse-astra-retry-20260923`.
+
+See the [machine-readable results](results/reuse-astra-20260923.json) and
+[interpretation and next experiment](evaluation-results.md). Neither a knowledge
+base benefit nor an additional graph benefit was demonstrated: the code makes the
+compatibility requirement apparent, and flat retrieval already includes it.
+This is an inconclusive small synthetic comparison, not evidence against either
+approach. Real-project value and autonomous retrieval remain untested.

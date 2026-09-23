@@ -1,0 +1,5 @@
+FROM knowledge-eval-base:local
+ARG CODEX_VERSION=0.155.0-alpha.16
+RUN apt-get update && apt-get install -y --no-install-recommends nodejs npm \
+    && rm -rf /var/lib/apt/lists/* \
+    && npm install -g "@openai/codex@${CODEX_VERSION}"

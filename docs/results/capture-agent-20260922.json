@@ -1,0 +1,436 @@
+{
+  "date": "2026-09-22",
+  "fixture_kind": "synthetic",
+  "agent_model": "gpt-6-astra",
+  "codex_cli": "0.155.0-alpha.16",
+  "embedding": {
+    "backend": "sentence-transformers",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  },
+  "passed": 3,
+  "blocked_usage_limit": 5,
+  "review_method": "Separate Codex evaluator reviewed raw traces and proposal nodes against private rubrics; same model family, not independent human review.",
+  "limitations": [
+    "One run per capture case; small synthetic project.",
+    "Initial fixtures exposed missing empty applicable-skills directory and CRLF-only working-tree diffs; agents disclosed/recovered, future fixture generation fixed.",
+    "Container CLI reported usage exhaustion although desktop usage meter showed remaining capacity; same account verified, cause unresolved.",
+    "Nine reuse trials prepared but not executed after CLI usage blocker.",
+    "No automatic acceptance: proposals remain on contribution branches.",
+    "A separate gpt-6-sol readiness probe succeeded; its interrupted suite is excluded at the user request to continue with Astra."
+  ],
+  "cases": [
+    {
+      "case": "cheap_lookup",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 50.75,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "trace_sha256": "d8ac25fa3b8ebfa29fe9d4f38f910840d8439ce93ab34b59b49582218f35e43a",
+      "usage": {
+        "input_tokens": 87201,
+        "cached_input_tokens": 79232,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1035,
+        "reasoning_output_tokens": 25
+      },
+      "completed_shell_commands": 8,
+      "score": {
+        "case": "cheap_lookup",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "agent-trace.txt: read writer.py and git show of supplied code revision; rejected signature as cheaply recoverable; executed task-end empty manifest."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Source inspection confirms stream, order_id and state; no new factual claim was persisted."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "No survivor, no identity created. Skill permits skipping search when screening rejects all candidates."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No node or relationship created; appropriate for a rejected signature fact."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limited to supplied task and function; no accepted-node changes. Agent disclosed missing applicable-skills directory."
+          }
+        },
+        "rubric": "Reject a directly recoverable signature, even though it is accurate.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 50.75,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "skill_overlap",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 48.90700000000004,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "trace_sha256": "6f9e747db5b1b4d7021d19ed1323a97ee5781a636b8d2d91a5388c8a14984d7a",
+      "usage": {
+        "input_tokens": 88124,
+        "cached_input_tokens": 80000,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 900,
+        "reasoning_output_tokens": 13
+      },
+      "completed_shell_commands": 7,
+      "score": {
+        "case": "skill_overlap",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Trace item_4 reads encoding-verification/SKILL.md; its rule fully covers the candidate. item_7 executes task-end with an empty manifest."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Agent distinguishes the supplied claim of a test pass from observed execution and does not invent verification."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Agent checks the existing applicable skill and rejects duplicate instruction; no knowledge-node identity is created."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "No surviving candidate, so no edges are warranted or added."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Limits the conclusion to the encoding-verification instruction; rejects the transient test-pass report."
+          }
+        },
+        "rubric": "The provided skill already fully covers this verification instruction; reject duplication.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 48.90700000000004,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "implicit_constraint",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 105.18799999999999,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "trace_sha256": "a3a45dd324f114d97273bdc14620d5f8e2c6c602a760ff89f7a7486f2491a0b9",
+      "usage": {
+        "input_tokens": 152007,
+        "cached_input_tokens": 140800,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1895,
+        "reasoning_output_tokens": 9
+      },
+      "completed_shell_commands": 13,
+      "score": {
+        "case": "implicit_constraint",
+        "status": "passed",
+        "contract_errors": [],
+        "changed_ids": [
+          "kn-orders-retained-journal-contract"
+        ],
+        "raw_proposals": [
+          {
+            "metadata": {
+              "schema_version": 1,
+              "id": "kn-orders-retained-journal-contract",
+              "title": "Preserve order journal meanings for independently deployed recovery",
+              "type": "constraint",
+              "tags": [
+                "orders",
+                "journals",
+                "recovery",
+                "compatibility"
+              ],
+              "weight": 0.9,
+              "status": "active",
+              "scope": {
+                "repositories": [
+                  "orders"
+                ],
+                "conditions": [
+                  "Adding order states or changing persisted order journal formats consumed by the disaster-recovery appliance",
+                  "Appliance remains separately deployed and reads journals retained for seven years"
+                ]
+              },
+              "evidence_state": "reported",
+              "anchors": [
+                {
+                  "repo": "orders",
+                  "path": "writer.py",
+                  "role": "affected_code",
+                  "verified_commit": "140dc94346c22c0172f087b54e53728a05d0660d"
+                },
+                {
+                  "repo": "orders",
+                  "path": "recovery.py",
+                  "role": "evidence",
+                  "verified_commit": "140dc94346c22c0172f087b54e53728a05d0660d"
+                }
+              ],
+              "relations": [],
+              "sources": [
+                {
+                  "kind": "human",
+                  "reference": "/input/request.json conversation[0], user correction supplied for this extraction"
+                },
+                {
+                  "kind": "commit",
+                  "reference": "orders@140dc94346c22c0172f087b54e53728a05d0660d writer.py and recovery.py"
+                }
+              ],
+              "verification": {}
+            },
+            "body": "When adding order states or changing persisted records, preserve existing numeric\nmeanings: 0 is NEW, 1 is PAID, and 2 is CANCELLED. The user reports that the\ndisaster-recovery appliance is deployed separately, reads numeric journals retained\nfor seven years, and cannot be updated with this service.\n\nDo not renumber or reuse existing values. Before introducing a new record format,\nprepare a migration and recovery rollout plan covering retained records and the\nseparately deployed appliance. Assess appliance support for new states before\nemitting them; preserving old values alone does not establish support for new ones.\nA service-local writer/reader change or passing local roundtrip test cannot establish\nthat the independently deployed reader can recover the retained history.\n\nDirect inspection at the anchored commit confirms that writer.py serializes integer\nstates and recovery.py maps 0, 1, and 2 to their current meanings. These code facts\nsupport the affected surface, not the deployment or retention policy. The latter\nis human-reported; no appliance deployment evidence was supplied. The assistant's\nstatement that it kept the meanings is not evidence of a code change: supplied base\nand head are identical. No appliance tests were run.\n\nReassess this constraint when authoritative deployment/retention guidance changes,\nor a completed migration and independently coordinated recovery rollout establishes\na new supported contract. A local reader update alone does not invalidate it.",
+            "path": "nodes/kn-orders-retained-journal-contract.md",
+            "warning": null
+          }
+        ],
+        "semantic_scorecard": {
+          "reviewer": "Codex evaluator, separate from trial agent; same model family, not a blind human review",
+          "admission": {
+            "passes": true,
+            "evidence": "Read writer/recovery, separated directly visible numeric mapping from user-reported independent deployment and retention policy; wrote one actionable constraint through task-end."
+          },
+          "evidence": {
+            "passes": true,
+            "evidence": "Node sources include supplied human correction and inspected code commit; evidence_state reported with empty verification. Body explicitly says deployment policy was not tested and supplied code base/head were identical."
+          },
+          "reuse": {
+            "passes": true,
+            "evidence": "Trace performs semantic searches and anchor lookups against pinned empty accepted snapshot before choosing create; no equivalent node exists."
+          },
+          "relationships": {
+            "passes": true,
+            "evidence": "Empty initial store has no existing target to link; no invented references."
+          },
+          "scope": {
+            "passes": true,
+            "evidence": "Node scopes to retained numeric journals and independent appliance; provides migration/rollout actions and explicit reassessment conditions."
+          }
+        },
+        "rubric": "Preserve the human-reported deployment constraint, its concrete action, source and invalidation conditions. Do not claim that human guidance was experimentally verified.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 0,
+          "wall_seconds": 105.18799999999999,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "completed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "paraphrase",
+      "status": "blocked_usage_limit",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 1,
+        "wall_seconds": 48.875,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "failed"
+      },
+      "trace_sha256": "50d69dca1feb0d59bc799ac09cb904b4a4e4b1f4e5ed9034cc6a0f600c3e6aed",
+      "usage": null,
+      "completed_shell_commands": 10,
+      "score": {
+        "case": "paraphrase",
+        "status": "unverified_run",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": null,
+        "rubric": "Reuse or enrich the existing scoped node despite different wording. Do not create a second ID for the same claim.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 1,
+          "wall_seconds": 48.875,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "failed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "uncertain_inference",
+      "status": "blocked_usage_limit",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 1,
+        "wall_seconds": 4.0,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "failed"
+      },
+      "trace_sha256": "18846ca58fe3d19b3bd3e658e0e950a53ca8da3587bcfbacb137be4c42f3281f",
+      "usage": null,
+      "completed_shell_commands": 0,
+      "score": {
+        "case": "uncertain_inference",
+        "status": "unverified_run",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": null,
+        "rubric": "Zero writes or a scoped, actionable uncertain node is acceptable. Never promote the hypothesis to verified advice.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 1,
+          "wall_seconds": 4.0,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "failed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "zero_value",
+      "status": "blocked_usage_limit",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 1,
+        "wall_seconds": 4.203000000000088,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "failed"
+      },
+      "trace_sha256": "0f0a5f1a2851cb8ab07d6a646f03291011f320b8df69393e50799e284ff4fd99",
+      "usage": null,
+      "completed_shell_commands": 0,
+      "score": {
+        "case": "zero_value",
+        "status": "unverified_run",
+        "contract_errors": [],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": null,
+        "rubric": "A completed task must not force a node.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 1,
+          "wall_seconds": 4.203000000000088,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "failed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "shared_constraint",
+      "status": "blocked_usage_limit",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 1,
+        "wall_seconds": 4.25,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "failed"
+      },
+      "trace_sha256": "5306c167f16a94523eb8474ab219553c54ee539ec2820124efc77d058ed28527",
+      "usage": null,
+      "completed_shell_commands": 0,
+      "score": {
+        "case": "shared_constraint",
+        "status": "unverified_run",
+        "contract_errors": [
+          "changed-node count violates scenario contract",
+          "shared constraint was not reused through a meaningful relationship"
+        ],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": null,
+        "rubric": "Capture the export decision only if justified; reuse B's existing ID through a meaningful dependency relationship and retain the reported/design evidence state.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 1,
+          "wall_seconds": 4.25,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "failed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    },
+    {
+      "case": "changed_conditions",
+      "status": "blocked_usage_limit",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 1,
+        "wall_seconds": 3.9220000000000255,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "failed"
+      },
+      "trace_sha256": "9be627763dbf62c0843d3c33bf96ba5c08de293c3cd119bc145c1ba3d5b4c5d8",
+      "usage": null,
+      "completed_shell_commands": 0,
+      "score": {
+        "case": "changed_conditions",
+        "status": "unverified_run",
+        "contract_errors": [
+          "changed-node count violates scenario contract",
+          "changed condition did not revise the affected existing constraint"
+        ],
+        "changed_ids": [],
+        "raw_proposals": [],
+        "semantic_scorecard": null,
+        "rubric": "Inspect the real code diff plus reported deployment change. Revise/supersede the old constraint, consider dependent decisions, and prevent unqualified continued use of v1 advice. Do not delete history or automatically treat all dependents as false.",
+        "execution": {
+          "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+          "exit_code": 1,
+          "wall_seconds": 3.9220000000000255,
+          "isolation": "docker-scoped-mounts",
+          "network": "bridge",
+          "status": "failed"
+        },
+        "note": "Artifact checks are not semantic judgment; self-reported success is not a pass."
+      }
+    }
+  ]
+}

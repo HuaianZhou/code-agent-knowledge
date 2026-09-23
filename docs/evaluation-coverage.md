@@ -15,10 +15,10 @@ Test names refer to `tests/test_knowledge_agent.py` unless stated otherwise.
 | Team proposal hidden until remote main sync | `test_shared_proposal_push_is_not_accepted_until_remote_main_advances` | Added; external Git acceptance, not a tool feature |
 | Local setup/review/accept | Existing setup/acceptance/stale-review tests | Real local Git repos |
 | Semantic paraphrase retrieval | `python -m evaluation retrieval` | Requires real model; lexical diagnostic cannot pass |
-| Admission, skill overlap, zero writes, uncertainty | `prepare-capture` cases + artifact scorer + independent scorecard | Needs actual isolated coding-agent runs |
+| Admission, skill overlap, zero writes, uncertainty | `prepare-capture` cases + artifact scorer + separate evaluator scorecard | Actual Astra runs recorded in `results/capture-astra-20260922.json`; synthetic cases, not a blind human review |
 | Reuse and relationship construction | `paraphrase`, `shared_constraint` cases | Actual stable IDs/edges plus semantic review |
 | Genuine condition change | `changed_conditions` maintenance case | Real v1→v2 fixture diff; independent semantic review |
-| No knowledge vs flat vs graph | `prepare-reuse`, `run`, `summarize-reuse` | Controlled retrieval, fresh container per trial |
+| No knowledge vs flat vs graph | `prepare-reuse`, `run`, `summarize-reuse` | Actual Astra runs: all three conditions passed 3/3; no demonstrated knowledge or graph benefit on this synthetic task. See `results/reuse-astra-20260923.json` |
 | Evaluation validity itself | `tests/test_evaluation.py` | Mount plans, provenance, budgets, no false semantic pass, artifact scoring and grader calibration |
 
 Do not count prepared trials, a lexical diagnostic, a mocked adapter or a manually

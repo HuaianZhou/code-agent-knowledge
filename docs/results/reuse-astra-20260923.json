@@ -1,0 +1,435 @@
+{
+  "date": "2026-09-23",
+  "fixture_kind": "synthetic",
+  "model": "gpt-6-astra",
+  "embedding": {
+    "backend": "sentence-transformers",
+    "model": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41"
+  },
+  "knowledge_provenance": "curated_fixture",
+  "conditions": {
+    "none": {
+      "passed": 3,
+      "total": 3,
+      "median_wall_seconds": 77.81200000000013,
+      "median_input_tokens": 94981,
+      "median_output_tokens": 1814,
+      "median_shell_commands": 5
+    },
+    "flat": {
+      "passed": 3,
+      "total": 3,
+      "median_wall_seconds": 81.68800000000192,
+      "median_input_tokens": 84192,
+      "median_output_tokens": 2212,
+      "median_shell_commands": 9
+    },
+    "graph": {
+      "passed": 3,
+      "total": 3,
+      "median_wall_seconds": 81.89099999999962,
+      "median_input_tokens": 99182,
+      "median_output_tokens": 2138,
+      "median_shell_commands": 5
+    }
+  },
+  "trials": [
+    {
+      "trial": "repeat-2-none",
+      "attempt": "reuse-agent-20260922",
+      "condition": "none",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 77.81200000000013,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.45299999999997453,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 77897,
+        "cached_input_tokens": 72448,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1814,
+        "reasoning_output_tokens": 26
+      },
+      "completed_shell_commands": 5,
+      "context_used": 0,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "ae65ccf7da73d4b703ef2fb921787f8a5ec1ef5b79ac39f3aa3f165cea03c5ee",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -5,6 +5,7 @@\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-3-none",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "none",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 81.34400000000096,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4530000000013388,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 94981,
+        "cached_input_tokens": 84992,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1939,
+        "reasoning_output_tokens": 111
+      },
+      "completed_shell_commands": 4,
+      "context_used": 0,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "447d99b82dce8db0dad1f9b5f1c9f4b5c55c1e3075bceca962cb00fbfe2715c1",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -5,6 +5,7 @@\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-3-flat",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "flat",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 80.0470000000023,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4370000000017171,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 114351,
+        "cached_input_tokens": 104832,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2117,
+        "reasoning_output_tokens": 165
+      },
+      "completed_shell_commands": 19,
+      "context_used": 2398,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "a1cb8a0521ec06944ff1fee12a43088d8f6e9c032c513a05cdf36bcf78fea736",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -2,9 +2,11 @@\n import json\n \n class State(IntEnum):\n+    # These values are persisted in unversioned journals; never renumber them.\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-2-flat",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "flat",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 92.10900000000038,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4220000000022992,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 84192,
+        "cached_input_tokens": 70784,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2620,
+        "reasoning_output_tokens": 274
+      },
+      "completed_shell_commands": 9,
+      "context_used": 2398,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "ee5f0f832bc7ddd51ca9c69fead387bc67d342e353c3fc6b6f5def57d44a2d47",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -2,9 +2,11 @@\n import json\n \n class State(IntEnum):\n+    # Persisted journal values must retain their numeric meanings.\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-3-graph",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "graph",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 81.89099999999962,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4679999999971187,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 98739,
+        "cached_input_tokens": 92032,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2138,
+        "reasoning_output_tokens": 171
+      },
+      "completed_shell_commands": 5,
+      "context_used": 1852,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "4d9f41a124977c8ef303269295dbec9d61e3fc3843f9b197cc0bb639ce7a27ad",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -5,6 +5,8 @@\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    # Journal values are retained; never renumber existing states.\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-1-graph",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "graph",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 91.04699999999866,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4529999999977008,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 99182,
+        "cached_input_tokens": 86784,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2462,
+        "reasoning_output_tokens": 310
+      },
+      "completed_shell_commands": 5,
+      "context_used": 1852,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "6a1cbc8f25f6cf4d351d0657b7f29c75447980f3baec3c7494fa3e22b75d8aee",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -5,6 +5,7 @@\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-2-graph",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "graph",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 70.125,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4059999999990396,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 112712,
+        "cached_input_tokens": 101248,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1702,
+        "reasoning_output_tokens": 65
+      },
+      "completed_shell_commands": 6,
+      "context_used": 1852,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "21f2cafd0f8e968faa70543026b1f486fde735cd0c14a87b07044c402a1565c3",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -2,9 +2,11 @@\n import json\n \n class State(IntEnum):\n+    # Persisted journal values: keep existing numeric meanings stable.\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-1-none",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "none",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 68.78099999999904,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.4219999999986612,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 101699,
+        "cached_input_tokens": 91648,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1777,
+        "reasoning_output_tokens": 21
+      },
+      "completed_shell_commands": 5,
+      "context_used": 0,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "921863b4068e0ea04a0407ccbca11384b9507ced80a3c96110f4a98fe6131a04",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -5,6 +5,7 @@\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    },
+    {
+      "trial": "repeat-1-flat",
+      "attempt": "reuse-astra-retry-20260923",
+      "condition": "flat",
+      "status": "passed",
+      "run": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 81.68800000000192,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "grading": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.48400000000037835,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "usage": {
+        "input_tokens": 82399,
+        "cached_input_tokens": 75520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2212,
+        "reasoning_output_tokens": 297
+      },
+      "completed_shell_commands": 5,
+      "context_used": 2398,
+      "starting_files": {
+        "README.md": "97bebe52d0328298c29e250252f580e725b79eb46e920930a55c52156b667aac",
+        "recovery.py": "5ec7e49efba83fcf91017fc16b67bd847dbbd6d19d5d6e847bce2784890ddb6e",
+        "test_public.py": "b57eb2352f0e77f3fb343492897c95e6cf20ee9959fd241c21996f7ecad3531a",
+        "writer.py": "5ff29505c89c67df19b87b69b5dca57965419fa887be7990e30ebca9d8633626"
+      },
+      "trace_sha256": "5dd0866aef88bad45473f78dde9d1894d80bcdae412372a6521dc55eebf5c17c",
+      "grader_sha256": "cdeb38143b86369c71f1080ef3feed9b0878655339a59d3e9a7a46d6064756a8",
+      "implementation_diff": {
+        "writer.py": "--- before/writer.py\n+++ after/writer.py\n@@ -2,9 +2,11 @@\n import json\n \n class State(IntEnum):\n+    # Persisted in unversioned journals; never renumber existing states.\n     NEW = 0\n     PAID = 1\n     CANCELLED = 2\n+    REFUNDED = 3\n \n def append_order(stream, order_id, state):\n     stream.write(json.dumps({\"id\": order_id, \"state\": int(state)}) + \"\\n\")\n",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -1,5 +1,5 @@\n import json\n \n def replay(stream):\n-    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\"}[row[\"state\"]])\n+    return [(row[\"id\"], {0: \"new\", 1: \"paid\", 2: \"cancelled\", 3: \"refunded\"}[row[\"state\"]])\n             for row in map(json.loads, stream)]\n"
+      }
+    }
+  ],
+  "attempt_history": "One original no-knowledge trial passed. Next run hit usage limit; after user reset, remaining eight used fresh workspaces with matching starting hashes/context contents. No completed behavioral failure excluded.",
+  "adoption_conclusion": null,
+  "limits": [
+    "Three trials per condition; timing and token counts are descriptive, not statistical evidence.",
+    "Contexts injected; autonomous retrieval invocation is not evaluated.",
+    "Flat semantic retrieval already includes the key constraint, so this fixture may not distinguish graph benefit.",
+    "No-knowledge code exposes numeric mappings and may be sufficient to solve the task.",
+    "Native trace token usage is measured; output-token budget is requested, not separately enforced by the adapter."
+  ]
+}

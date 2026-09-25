@@ -20,6 +20,9 @@ Test names refer to `tests/test_knowledge_agent.py` unless stated otherwise.
 | Genuine condition change | `changed_conditions` maintenance case | Real v1→v2 fixture diff; independent semantic review |
 | No knowledge vs flat vs graph | `prepare-reuse`, `run`, `summarize-reuse` | Actual Astra runs: all three conditions passed 3/3; no demonstrated knowledge or graph benefit on this synthetic task. See `results/reuse-astra-20260923.json` |
 | Evaluation validity itself | `tests/test_evaluation.py` | Mount plans, provenance, budgets, no false semantic pass, artifact scoring and grader calibration |
+| Capture-derived deployment knowledge affects code | Fulfillment export/recovery/control pilot | Actual Astra: no knowledge 1/3; semantic and graph each 3/3; synthetic and one run per cell |
+| External condition change without source changes | Fulfillment maintenance and post-migration pilot | All three stable IDs revised; stale knowledge 0/2 vs maintained 2/2; no independent deployment verification |
+| Counterfactual consumer calibration | `tests/test_fulfillment_evaluation.py` | Public tests accept both plausible variants; separate consumer reverses expected acceptance when its contract changes |
 
 Do not count prepared trials, a lexical diagnostic, a mocked adapter or a manually
 authored node as a completed real-agent or semantic-search evaluation. See

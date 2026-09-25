@@ -85,4 +85,24 @@ For a graph-sensitive task, use the A-to-B-to-C path to expose a separately affe
 component or verification obligation, then grade the resulting implementation and
 compatibility tests. A controlled path-only test may establish that the mechanism
 works, but claims of practical value require naturally occurring retrieval gaps
-and a real project. These follow-up experiments have not yet been run.
+and a real project. The synthetic follow-up below has now run; real-project
+validation remains outstanding.
+
+## Fulfillment lifecycle follow-up, 2026-09-24
+
+The [fulfillment pilot](results/fulfillment-astra-20260924.md) used actual
+capture-derived knowledge and a separate external-consumer contract. No knowledge
+passed 1/3 coding tasks; semantic retrieval and semantic plus graph each passed
+3/3. Both no-knowledge compatibility failures explicitly acknowledged missing
+deployment information. The unrelated inventory control passed in every condition.
+
+After the receiver contract changed, stale knowledge passed 0/2 tasks and reviewed
+maintenance output passed 2/2. Capture created three nodes; maintenance updated
+those same three IDs and preserved their dependency relationships and historical
+evidence. Both proposals were accepted unchanged after separate Codex review.
+
+This provides synthetic evidence of useful knowledge transfer and maintenance.
+It still does not establish additional graph benefit: the initial relevant flat
+and graph contexts contained the same nodes, and longer maintained nodes limited
+later graph expansion. There was one execution per coding cell, not a statistical
+benchmark or real-project productivity measurement.

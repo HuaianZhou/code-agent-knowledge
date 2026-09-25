@@ -111,3 +111,32 @@ base benefit nor an additional graph benefit was demonstrated: the code makes th
 compatibility requirement apparent, and flat retrieval already includes it.
 This is an inconclusive small synthetic comparison, not evidence against either
 approach. Real-project value and autonomous retrieval remain untested.
+
+## Fulfillment lifecycle pilot, 2026-09-23–24
+
+Forty-eight automated tests passed, including two new calibration tests covering
+opposite consumer contracts and the inventory control. Correct and incorrect
+deployment variants both pass public tests; the independent grader distinguishes
+them and reverses acceptance after migration. Fixture/grader/protocol hashes were
+frozen before actor execution and verified unchanged afterward.
+
+Fifteen Astra sessions completed: actual streaming change plus capture, nine
+controlled coding trials, maintenance triggered by an external report without a
+source diff, and four stale/maintained coding trials. A quota-interrupted attempt
+was preserved and retried in a fresh workspace after reset; no completed behavioral
+failure was removed. All coding starts and consumer grader hashes matched.
+
+Capture proposed three reported-evidence nodes with two constrained_by edges.
+Maintenance revised all three IDs, kept history and reported evidence, and preserved
+the dependency edges. Both were accepted unchanged after separate Codex review,
+not blind human review. The source history was imported for the maintenance clone
+to make captured anchors resolvable without altering its files; the anchor scan
+was clean, and the external condition change still caused correction proposals.
+
+No knowledge: 1/3 initial coding tasks passed. Semantic: 3/3. Semantic plus graph:
+3/3. After migration, stale knowledge: 0/2; maintained: 2/2. These are separate
+consumer grades, not self-reported success. The small synthetic fixture supports
+knowledge-transfer and maintenance behavior, but flat/graph evidence overlap and
+context truncation prevent a claim of additional graph benefit. See the
+[full results](results/fulfillment-astra-20260924.md) and
+[machine report](results/fulfillment-astra-20260924.json).

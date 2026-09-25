@@ -283,6 +283,9 @@ Prepared trials are not reported as completed agent evaluations.
 Actual isolated Astra capture/maintenance outcomes, proposed nodes, review criteria
 and semantic-retrieval measurements are recorded in the
 [agent evaluation results](docs/evaluation-results.md).
+The [fulfillment lifecycle pilot](docs/fulfillment-evaluation.md) provides a larger
+synthetic project with an external consumer contract, actual capture-derived
+knowledge, an unrelated control task, and stale-versus-maintained comparisons.
 No claim of measured agent productivity or automatic semantic deduplication is made.
 
 The actual Kiro draft was not supplied. Company-approved embedding model, remote and

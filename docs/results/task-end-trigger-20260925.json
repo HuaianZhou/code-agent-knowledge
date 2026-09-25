@@ -1,0 +1,202 @@
+{
+  "kind": "standing_policy_capture",
+  "model": "gpt-6-astra",
+  "trials": [
+    {
+      "case": "qualifying",
+      "request": {
+        "task": "Change write_batch to stream iterable records directly rather than materialize them. Preserve output and run relevant tests.",
+        "project": "/workspace/project",
+        "model": "gpt-6-astra",
+        "max_output_tokens": 8000,
+        "conversation": [
+          {
+            "role": "user",
+            "content": "Operations handoff F-17: north's fulfillment appliance is independently deployed and accepts only CSV v1 (id,sku,quantity). It cannot ingest JSONL v2. South and newly onboarded sites accept JSONL v2. Preserve north's CSV routing until Operations confirms that its receiver has migrated; shipping this service does not upgrade it."
+          },
+          {
+            "role": "user",
+            "content": "Incident F-18: the north appliance polls both normal delivery and disaster-recovery replacement batches. They terminate at the same ingestion gateway despite their different service entry points. A normal-export change and a recovery-export change share the receiver compatibility obligation. Recovery must still apply latest-upsert/delete semantics. Review both paths whenever the receiver contract changes."
+          }
+        ]
+      },
+      "execution": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 129.4220000000205,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "coding_grade": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.46799999999348074,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "policy": "## Task-end knowledge capture\n\nBefore your final response after completing a coding task, run the knowledge-extract\nworkflow at `/input/skills/knowledge-extract/SKILL.md` using the current conversation and inspected evidence.\nUse this CLI consistently: `python -m knowledge_agent --config /workspace/config.json`.\nRepository identities and paths are in `/input/repositories.json`; inspect applicable\nproject skills before deciding that a claim is not already covered.\n\nSearch existing knowledge before creating or updating a node. Preserve source,\nscope and uncertainty. Do not capture credentials, personal data, generic advice,\nor facts cheaply recoverable from code. Zero qualifying candidates is valid:\nexecute the workflow's empty-manifest submission and report no knowledge changes.\n\nThis standing policy authorizes local proposals only. Leave nonempty proposals for\nseparate review; do not self-accept, push, or publish them. Report the actual proposal\nor zero-write result briefly with the coding outcome. If capture is blocked, report\nthe blocker accurately without claiming it ran. Honor an explicit user instruction\nto skip capture. Do not recursively capture the act of capturing knowledge.\n",
+      "policy_sha256": "2f6bd824456de029663a7eb16770c5f75c133d009af8891f1048a9971720256a",
+      "source_hashes": {
+        "evaluation/task_end_trigger.py": "daeb24bf753ae20429a59e40f890893893f8a24d4cce8bc3eafcc7da36c009bc",
+        "integrations/codex/AGENTS.fragment.md": "f8924272545cfbe0bf1ca31954c16a9d9ab0b5870f47bbde9b1fb1f000176c8b"
+      },
+      "capture_command_candidates": [
+        {
+          "id": "item_10",
+          "type": "command_execution",
+          "command": "/bin/bash -lc \"mkdir -p /workspace/capture-streaming\ncat > /workspace/capture-streaming/north.md <<'EOF'\n---\nschema_version: 1\nid: kn-north-receiver-compatibility\ntitle: North receiver compatibility spans normal and recovery exports\ntype: constraint\ntags: [fulfillment, receiver, compatibility, recovery]\nweight: 0.9\nstatus: active\nscope:\n  repositories: [fulfillment]\n  conditions:\n    - Changes to normal delivery or disaster-recovery replacement wire formats before Operations confirms north receiver migration.\nevidence_state: reported\nanchors:\n  - repo: fulfillment\n    path: exporter.py\n    symbol: write_batch\n    role: affected_code\n    verified_commit: 25c6a2c1c00149a020598f6da3c25d9e344bbc56\n  - repo: fulfillment\n    path: recovery.py\n    symbol: write_recovery\n    role: affected_code\n    verified_commit: 25c6a2c1c00149a020598f6da3c25d9e344bbc56\nrelations: []\nsources:\n  - kind: human\n    reference: User-provided Operations handoff F-17 in evaluation task conversation.\n  - kind: human\n    reference: User-provided incident F-18 in evaluation task conversation.\nverification: {}\n---\nNorth's independently deployed fulfillment appliance accepts only CSV v1 with\nid,sku,quantity. Operations handoff F-17 reports that it cannot ingest JSONL v2;\nsouth and newly onboarded sites accept JSONL v2. Shipping this service does not\nupgrade north's receiver.\n\nIncident F-18 reports that normal delivery and disaster-recovery replacement\nbatches terminate at the same ingestion gateway, even though service entry points\ndiffer. Preserve north's CSV routing in both paths until Operations explicitly\nconfirms receiver migration. Review write_batch and write_recovery together whenever\nchanging the receiver contract; recovery must retain latest-upsert/delete semantics.\nJSONL support in wire_formats is not evidence of receiver migration, and south's\ncapability is not an instruction to change the existing default for all sites.\n\nThese deployment facts and the shared gateway are human-reported, not independently\nverified by repository tests. Revisit this constraint when Operations confirms\nnorth migration or reports a change to the shared ingestion topology; validate both\npaths against the confirmed receiver contract before changing their routing.\nEOF\npython - <<'PY'\nimport json\nfrom pathlib import Path\nmanifest = {\n 'nodes': ['north.md'],\n 'operations': {'kn-north-receiver-compatibility': 'create'},\n 'admission': [{\n  'id': 'kn-north-receiver-compatibility',\n  'not_cheaply_recoverable': {'passes': True, 'reason': 'Independent receiver deployment and shared normal/recovery ingestion gateway come from F-17/F-18, not code.'},\n  'not_skill_duplicate': {'passes': True, 'reason': 'Inspected available skills and /input/skills; no project skill covers the reported receiver deployment constraint.'},\n  'actionable': {'passes': True, 'reason': 'Preserve north CSV routing and review both export entry points until Operations confirms migration.'},\n  'future_use': {'passes': True, 'reason': 'Future format changes in either export path can violate the same external receiver contract.'},\n  'existing_knowledge_search': 'At revision 6b87ef20a3f97df90cba8bfc6821b3ca9ff94c1b searched north CSV receiver normal recovery independent deployment (fulfillment) and F-17 F-18 ingestion gateway migration (all repositories), all statuses; both returned zero results. Anchor lookups for exporter.py and recovery.py returned zero results. Read of proposed ID returned missing node. Synchronized store contains zero nodes; no IDs available to compare or expand.'\n }]\n}\nPath('/workspace/capture-streaming/manifest.json').write_text(json.dumps(manifest, indent=2)+'\\\\n')\nPY\npython -m knowledge_agent --config /workspace/config.json validate --file /workspace/capture-streaming/north.md\npython -m knowledge_agent --config /workspace/config.json task-end /workspace/capture-streaming/manifest.json\"",
+          "aggregated_output": "{\n  \"valid\": true,\n  \"id\": \"kn-north-receiver-compatibility\",\n  \"scope\": \"single-node schema; graph links not checked\"\n}\n{\n  \"outcome\": \"proposal\",\n  \"branch\": \"knowledge/proposal-a590419d2d59\",\n  \"worktree\": \"/workspace/state/proposals/a590419d2d59\",\n  \"base_revision\": \"6b87ef20a3f97df90cba8bfc6821b3ca9ff94c1b\",\n  \"committed\": true,\n  \"warning\": null,\n  \"next\": \"Review against latest accepted state; push and open a request are separate operations.\"\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "accepted_main_unchanged": true,
+      "accepted_nodes": 0,
+      "accepted_checkout_status": "",
+      "proposals": [
+        {
+          "branch": "knowledge/proposal-a590419d2d59",
+          "revision": "7dc4e1f962a3ffba89ea110bc37a0e0c293dd8f2",
+          "nodes": [
+            {
+              "metadata": {
+                "schema_version": 1,
+                "id": "kn-north-receiver-compatibility",
+                "title": "North receiver compatibility spans normal and recovery exports",
+                "type": "constraint",
+                "tags": [
+                  "fulfillment",
+                  "receiver",
+                  "compatibility",
+                  "recovery"
+                ],
+                "weight": 0.9,
+                "status": "active",
+                "scope": {
+                  "repositories": [
+                    "fulfillment"
+                  ],
+                  "conditions": [
+                    "Changes to normal delivery or disaster-recovery replacement wire formats before Operations confirms north receiver migration."
+                  ]
+                },
+                "evidence_state": "reported",
+                "anchors": [
+                  {
+                    "repo": "fulfillment",
+                    "path": "exporter.py",
+                    "symbol": "write_batch",
+                    "role": "affected_code",
+                    "verified_commit": "25c6a2c1c00149a020598f6da3c25d9e344bbc56"
+                  },
+                  {
+                    "repo": "fulfillment",
+                    "path": "recovery.py",
+                    "symbol": "write_recovery",
+                    "role": "affected_code",
+                    "verified_commit": "25c6a2c1c00149a020598f6da3c25d9e344bbc56"
+                  }
+                ],
+                "relations": [],
+                "sources": [
+                  {
+                    "kind": "human",
+                    "reference": "User-provided Operations handoff F-17 in evaluation task conversation."
+                  },
+                  {
+                    "kind": "human",
+                    "reference": "User-provided incident F-18 in evaluation task conversation."
+                  }
+                ],
+                "verification": {}
+              },
+              "body": "North's independently deployed fulfillment appliance accepts only CSV v1 with\nid,sku,quantity. Operations handoff F-17 reports that it cannot ingest JSONL v2;\nsouth and newly onboarded sites accept JSONL v2. Shipping this service does not\nupgrade north's receiver.\n\nIncident F-18 reports that normal delivery and disaster-recovery replacement\nbatches terminate at the same ingestion gateway, even though service entry points\ndiffer. Preserve north's CSV routing in both paths until Operations explicitly\nconfirms receiver migration. Review write_batch and write_recovery together whenever\nchanging the receiver contract; recovery must retain latest-upsert/delete semantics.\nJSONL support in wire_formats is not evidence of receiver migration, and south's\ncapability is not an instruction to change the existing default for all sites.\n\nThese deployment facts and the shared gateway are human-reported, not independently\nverified by repository tests. Revisit this constraint when Operations confirms\nnorth migration or reports a change to the shared ingestion topology; validate both\npaths against the confirmed receiver contract before changing their routing.",
+              "path": "nodes/kn-north-receiver-compatibility.md",
+              "warning": null
+            }
+          ]
+        }
+      ],
+      "native_usage": {
+        "input_tokens": 223509,
+        "cached_input_tokens": 200192,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2286,
+        "reasoning_output_tokens": 55
+      },
+      "trace_sha256": "5f919b05b9b5d9bf43ffb5e0957a7dde02cbf5c60e540659ee0bba76f69e5a53",
+      "final_response": "Updated `write_batch` to pass records directly to `encode`, eliminating list materialization while preserving output and format defaults.\n\nAll 3 tests pass, including streaming checks for both formats and recovery semantics.\n\nKnowledge proposal `knowledge/proposal-a590419d2d59` captures F-17/F-18, compared against revision `6b87ef2`. Automated checks passed; the [local proposal](/workspace/state/proposals/a590419d2d59) awaits separate review and remains unaccepted and unpublished.",
+      "review": {
+        "reviewer": "Parent Codex evaluator, not blind human review",
+        "passes": true,
+        "evidence": "Native trace begins by identifying the required capture workflow, reads the actual skill and AGENTS.md, searches the empty store, validates the candidate and executes task-end successfully. User task contains no capture or skill instruction. Actual proposal contains one reported constraint covering north CSV before confirmed migration and both export paths, sourced to F-17/F-18 with invalidation conditions. No forced decision-node split. Accepted main unchanged and clean. Separate streaming grader passed.",
+        "achieved_stage": "local proposal, not accepted",
+        "limitation": "Standing-policy compliance in one synthetic case, not reliable host-hook execution."
+      }
+    },
+    {
+      "case": "zero_value",
+      "request": {
+        "task": "Fix inventory.summarize so repeated SKUs have their quantities summed. Support a one-pass iterable and empty input. Keep export and recovery behavior unchanged. Run relevant tests.",
+        "project": "/workspace/project",
+        "model": "gpt-6-astra",
+        "max_output_tokens": 8000
+      },
+      "execution": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 59.92200000002049,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "coding_grade": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.48399999999674037,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "policy": "## Task-end knowledge capture\n\nBefore your final response after completing a coding task, run the knowledge-extract\nworkflow at `/input/skills/knowledge-extract/SKILL.md` using the current conversation and inspected evidence.\nUse this CLI consistently: `python -m knowledge_agent --config /workspace/config.json`.\nRepository identities and paths are in `/input/repositories.json`; inspect applicable\nproject skills before deciding that a claim is not already covered.\n\nSearch existing knowledge before creating or updating a node. Preserve source,\nscope and uncertainty. Do not capture credentials, personal data, generic advice,\nor facts cheaply recoverable from code. Zero qualifying candidates is valid:\nexecute the workflow's empty-manifest submission and report no knowledge changes.\n\nThis standing policy authorizes local proposals only. Leave nonempty proposals for\nseparate review; do not self-accept, push, or publish them. Report the actual proposal\nor zero-write result briefly with the coding outcome. If capture is blocked, report\nthe blocker accurately without claiming it ran. Honor an explicit user instruction\nto skip capture. Do not recursively capture the act of capturing knowledge.\n",
+      "policy_sha256": "2f6bd824456de029663a7eb16770c5f75c133d009af8891f1048a9971720256a",
+      "source_hashes": {
+        "evaluation/task_end_trigger.py": "daeb24bf753ae20429a59e40f890893893f8a24d4cce8bc3eafcc7da36c009bc",
+        "integrations/codex/AGENTS.fragment.md": "f8924272545cfbe0bf1ca31954c16a9d9ab0b5870f47bbde9b1fb1f000176c8b"
+      },
+      "capture_command_candidates": [
+        {
+          "id": "item_9",
+          "type": "command_execution",
+          "command": "/bin/bash -lc \"mkdir -p /tmp/inventory-knowledge-capture && python -c 'import json; from pathlib import Path; Path(\\\"/tmp/inventory-knowledge-capture/manifest.json\\\").write_text(json.dumps({\\\"nodes\\\": [], \\\"admission\\\": []}))' && python -m knowledge_agent --config /workspace/config.json task-end /tmp/inventory-knowledge-capture/manifest.json && git status --short\"",
+          "aggregated_output": "{\n  \"outcome\": \"zero_qualifying_candidates\",\n  \"writes\": 0\n}\n M inventory.py\n?? __pycache__/\n?? test_inventory.py\n",
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "accepted_main_unchanged": true,
+      "accepted_nodes": 0,
+      "accepted_checkout_status": "",
+      "proposals": [],
+      "native_usage": {
+        "input_tokens": 147494,
+        "cached_input_tokens": 136064,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1039,
+        "reasoning_output_tokens": 23
+      },
+      "trace_sha256": "33be1340c38e070b446259a57e7018deee4db3d0c490363d40421663bdc893fb",
+      "final_response": "Fixed `inventory.summarize` to sum repeated SKU quantities in one pass and return `{}` for empty input. Export and recovery code remain unchanged.\n\nAll 4 tests passed via `python -m unittest discover -v`.\n\nKnowledge capture completed with zero writes: no qualifying knowledge beyond the code and tests.",
+      "review": {
+        "reviewer": "Parent Codex evaluator, not blind human review",
+        "passes": true,
+        "evidence": "Native trace reads the capture skill and successfully runs task-end with an empty manifest after the inventory fix. CLI returns zero_qualifying_candidates and writes=0. No knowledge branch exists, accepted main unchanged and clean, and separate inventory/export-preservation grader passed. User task contains no capture instruction.",
+        "achieved_stage": "zero-write capture completed",
+        "limitation": "One code-only control; does not establish precision across ordinary conversations."
+      }
+    }
+  ],
+  "limitation": "Two synthetic trials. Tests standing AGENTS.md compliance, not a deterministic host hook, skill-description-only discovery, or reliability under interruptions. Command matching is evidence for review, not a semantic score."
+}

@@ -106,3 +106,12 @@ It still does not establish additional graph benefit: the initial relevant flat
 and graph contexts contained the same nodes, and longer maintained nodes limited
 later graph expansion. There was one execution per coding cell, not a statistical
 benchmark or real-project productivity measurement.
+
+## Standing capture and on-demand retrieval, 2026-09-25
+
+The [workflow pilot](results/agent-workflows-20260925.md) completed two task-end
+capture cases and three on-demand coding cases. Capture produced one qualifying
+local proposal and zero writes on the control. Both export agents retrieved and
+applied operational constraints before editing; the inventory control skipped
+retrieval. All five coding grades passed. The quota-interrupted export attempt is
+retained separately. These results do not isolate graph benefit or prove reliability.

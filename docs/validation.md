@@ -140,3 +140,7 @@ knowledge-transfer and maintenance behavior, but flat/graph evidence overlap and
 context truncation prevent a claim of additional graph benefit. See the
 [full results](results/fulfillment-astra-20260924.md) and
 [machine report](results/fulfillment-astra-20260924.json).
+
+## Standing capture and on-demand retrieval, 2026-09-25
+
+Two new preparation tests passed with `python -m unittest tests.test_task_end_trigger tests.test_on_demand -v`. Five isolated Astra sessions completed with separate passing coding grades. Standing capture proposed one qualifying constraint and correctly wrote nothing for the code-only control. On-demand export and recovery retrieved relevant evidence before edits; inventory skipped retrieval. All accepted stores remained unchanged. Frozen preparation/policy/grader hashes matched after execution. The usage-interrupted export attempt is retained separately; its fresh retry passed. See the [workflow report](results/agent-workflows-20260925.md) for evidence and limits.

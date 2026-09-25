@@ -286,6 +286,9 @@ and semantic-retrieval measurements are recorded in the
 The [fulfillment lifecycle pilot](docs/fulfillment-evaluation.md) provides a larger
 synthetic project with an external consumer contract, actual capture-derived
 knowledge, an unrelated control task, and stale-versus-maintained comparisons.
+Opt-in [task-end capture](docs/task-end-capture.md) and
+[on-demand retrieval](docs/on-demand-retrieval.md) policies were also exercised in
+[five completed Astra sessions](docs/results/agent-workflows-20260925.md).
 No claim of measured agent productivity or automatic semantic deduplication is made.
 
 The actual Kiro draft was not supplied. Company-approved embedding model, remote and

@@ -24,6 +24,9 @@ Test names refer to `tests/test_knowledge_agent.py` unless stated otherwise.
 | External condition change without source changes | Fulfillment maintenance and post-migration pilot | All three stable IDs revised; stale knowledge 0/2 vs maintained 2/2; no independent deployment verification |
 | Counterfactual consumer calibration | `tests/test_fulfillment_evaluation.py` | Public tests accept both plausible variants; separate consumer reverses expected acceptance when its contract changes |
 
+| Capture without task-specific reminder | `evaluation.task_end_trigger`; `tests/test_task_end_trigger.py` | Two completed Astra cases: qualifying proposal and zero-write control; standing policy, not host hook |
+| Agent-selected retrieval before implementation | `evaluation.on_demand`; `tests/test_on_demand.py` | Export and recovery retrieved constraints before editing; inventory skipped retrieval; all three consumer grades passed |
+
 Do not count prepared trials, a lexical diagnostic, a mocked adapter or a manually
 authored node as a completed real-agent or semantic-search evaluation. See
 `docs/validation.md` for the actual execution record.

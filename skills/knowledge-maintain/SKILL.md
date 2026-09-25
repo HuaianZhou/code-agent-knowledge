@@ -59,7 +59,7 @@ For each changed claim, check and record:
 - Scope: compare conditions, versions and deployment separately from code revisions.
 - Duplicates: read each plausible existing candidate and compare conclusion and
   scope; similarity alone neither proves nor rules out equivalence.
-- Graph/anchors: check that edge types express the supported relationship and
+- Graph/anchors: check that connected nodes are relevant to each other and
   anchor paths/symbols/revisions have the stated role. Verify merge redirects,
   rewritten references and preserved provenance; inspect unexpected deletions.
 
@@ -96,8 +96,10 @@ knowledge-agent --config CONFIG read NODE_ID --revision SHA
 knowledge-agent --config CONFIG context NODE_ID --all-statuses --depth 2 --max-nodes 20 --max-tokens 16000 --revision SHA
 ```
 
-Impact follows incoming constrained_by/depends_on/supported_by relationships.
-`related_to` supports exploration, not invalidation propagation. Check truncation
+Impact follows all connections in both directions, including historical typed links.
+Treat results as candidates: assess each claim independently; a connection does not
+prove dependency or invalidity. Use `related_nodes` for new links and explain their
+relevance in the node body. Check truncation
 and record any deferred nodes. Check command revisions remain consistent; resync
 and repeat affected comparisons if another operation changes the index.
 

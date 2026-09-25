@@ -10,7 +10,7 @@ import subprocess
 import uuid
 
 from .gitstore import accepted, git, has_remote, revision, snapshot, synchronize
-from .model import DEPENDENCIES, KnowledgeError, admission, parse, require, resolve, validate_graph
+from .model import KnowledgeError, admission, parse, require, resolve, validate_graph
 
 
 def propose(config, manifest, manifest_dir=None):
@@ -172,22 +172,23 @@ def review_impact(view, repo, paths=(), symbols=(), changed_ids=(), code_repo=No
         if any(a["repo"] == repo and (a["path"] in changed or a.get("symbol") in symbols)
                for a in n.meta["anchors"]):
             seeds.add(n.id)
-    incoming = {key: [] for key in view.nodes}
+    connected = {key: set() for key in view.nodes}
     for n in view.nodes.values():
         for r in n.meta["relations"]:
-            if r["type"] in DEPENDENCIES:
-                incoming[resolve(r["target"], view.nodes, view.aliases)].append(n.id)
+            target = resolve(r["target"], view.nodes, view.aliases)
+            connected[target].add(n.id)
+            connected[n.id].add(target)
     queue, reasons = deque(sorted(seeds)), {key: [key] for key in seeds}
     while queue:
         key = queue.popleft()
-        for dependent in sorted(incoming[key]):
+        for dependent in sorted(connected[key]):
             if dependent not in reasons:
                 reasons[dependent] = reasons[key] + [dependent]
                 queue.append(dependent)
     return {"revision": view.revision, "changed_paths": sorted(changed), "suggested_anchor_moves": moves,
             "results": [{**view.nodes[key].as_dict(), "suggested_status": "needs_review", "impact_path": path}
                         for key, path in sorted(reasons.items())],
-            "note": "Review candidates only. Code movement or changes do not prove a conclusion false."}
+            "note": "Connected review candidates in both directions, including historical link types. A connection does not imply dependency or invalidity; assess each node's evidence and scope."}
 
 
 def maintenance(view, repositories, index=None, embedder=None):

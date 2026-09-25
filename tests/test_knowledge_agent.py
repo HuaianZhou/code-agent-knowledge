@@ -10,7 +10,7 @@ import unittest
 from knowledge_agent.cli import main
 from knowledge_agent.gitstore import accepted, git, initialize, load_config, setup, snapshot, synchronize
 from knowledge_agent.index import Embedder, Index
-from knowledge_agent.model import KnowledgeError, Node, parse, validate_graph
+from knowledge_agent.model import LEGACY_RELATIONS, KnowledgeError, Node, parse, validate_graph
 from knowledge_agent.workflow import accept_local, maintenance, propose, push, review, review_impact
 
 
@@ -56,9 +56,9 @@ class KnowledgeTest(unittest.TestCase):
         git(self.repo, "init", "-b", "main")
         git(self.repo, "config", "user.name", "Test Fixture")
         git(self.repo, "config", "user.email", "fixture@example.invalid")
-        self.a = node("A", "State encoder changes", [("constrained_by", "B")], .4)
+        self.a = node("A", "State encoder changes", [("related_nodes", "B")], .4)
         self.b = node("B", "Persisted ordinals outlive deployments", weight=.9)
-        self.c = node("C", "Recovery tool changes", [("depends_on", "B")], .7)
+        self.c = node("C", "Recovery tool changes", [("related_nodes", "B")], .7)
         self.save(self.a, self.b, self.c)
         self.rev = self.commit()
         self.config = initialize(self.root / "config.json", self.repo)
@@ -89,7 +89,7 @@ class KnowledgeTest(unittest.TestCase):
                                      "merges": merges or {}})
 
     def test_bidirectional_graph_and_cycles(self):
-        self.b.meta["relations"] = [{"type": "depends_on", "target": "A"}]
+        self.b.meta["relations"] = [{"type": "related_nodes", "target": "A"}]
         self.save(self.b)
         self.commit()
         self.index.rebuild(self.repo, "main", self.embed)
@@ -106,6 +106,40 @@ class KnowledgeTest(unittest.TestCase):
             report = view.context("A", **kwargs)
             self.assertTrue(report["truncated"])
             self.assertIn(reason, report["truncation_reasons"])
+
+    def test_generic_connections_review_both_directions_without_mutation(self):
+        self.b.meta["relations"] = [{"type": "related_nodes", "target": "A"}]
+        self.save(self.b, node("D", relations=[("related_nodes", "C")]), node("isolated"))
+        self.commit()
+        self.index.rebuild(self.repo, "main", self.embed)
+        view = self.index.view()
+        for seed in ("A", "D"):
+            report = review_impact(view, "orders", changed_ids=[seed])
+            rows = {r["metadata"]["id"]: r for r in report["results"]}
+            self.assertEqual(set(rows), {"A", "B", "C", "D"})
+            self.assertTrue(all(r["impact_path"][0] == seed for r in rows.values()))
+            self.assertTrue(all(r["metadata"]["status"] == "active" for r in rows.values()))
+        self.assertEqual([r["metadata"]["id"] for r in
+                          view.context("A", depth=3, relations=["related_nodes"], max_tokens=100000)["results"]],
+                         ["A", "B", "C", "D"])
+        self.assertFalse(git(self.repo, "status", "--porcelain").stdout)
+
+    def test_legacy_links_remain_readable_and_connected(self):
+        for kind in sorted(LEGACY_RELATIONS):
+            with self.subTest(kind=kind):
+                old = node("legacy", relations=[(kind, "B")])
+                self.assertEqual(parse(old.markdown()).meta["relations"], old.meta["relations"])
+                self.save(old)
+                self.commit()
+                self.index.rebuild(self.repo, "main", self.embed)
+                view = self.index.view()
+                self.assertEqual({r["metadata"]["id"] for r in
+                                  view.context("legacy", max_tokens=100000)["results"]},
+                                 {"legacy", "A", "B", "C"})
+                for seed in ("A", "legacy"):
+                    self.assertEqual({r["metadata"]["id"] for r in
+                                      review_impact(view, "orders", changed_ids=[seed])["results"]},
+                                     {"legacy", "A", "B", "C"})
 
     def test_weight_filters_status_and_scope(self):
         self.b.meta["status"] = "needs_review"
@@ -203,7 +237,7 @@ class KnowledgeTest(unittest.TestCase):
 
     def test_proposals_isolated_from_dirty_accepted_worktree(self):
         (self.repo / "unrelated.txt").write_text("keep me")
-        report = self.proposal(node("D", relations=[("depends_on", "B")]))
+        report = self.proposal(node("D", relations=[("related_nodes", "B")]))
         self.assertTrue(report["committed"])
         self.assertEqual((self.repo / "unrelated.txt").read_text(), "keep me")
         self.assertNotIn("D", snapshot(self.repo, "main")[1])
@@ -244,17 +278,17 @@ class KnowledgeTest(unittest.TestCase):
         self.assertIn("B", result["conflicting_ids"])
         self.assertEqual(result["recommendation"], "blocked")
 
-    def test_anchor_lookup_and_dependency_impact(self):
+    def test_anchor_lookup_and_connected_impact(self):
         self.b.meta["anchors"] = [{"repo": "orders", "path": "journal.py", "symbol": "decode",
                                     "role": "affected_code", "verified_commit": self.rev}]
-        d = node("D", relations=[("related_to", "B")])
+        d = node("D", relations=[("related_nodes", "B")])
         self.save(self.b, d)
         self.commit()
         self.index.rebuild(self.repo, "main", self.embed)
         view = self.index.view()
         self.assertEqual(view.anchor("orders", "journal.py", "decode")["results"][0]["metadata"]["id"], "B")
         impact = review_impact(view, "orders", ["journal.py"])
-        self.assertEqual({r["metadata"]["id"] for r in impact["results"]}, {"A", "B", "C"})
+        self.assertEqual({r["metadata"]["id"] for r in impact["results"]}, {"A", "B", "C", "D"})
         self.assertTrue(all(r["suggested_status"] == "needs_review" for r in impact["results"]))
         self.assertTrue(all(n.meta["status"] == "active" for n in view.nodes.values()))
 
@@ -328,7 +362,7 @@ class KnowledgeTest(unittest.TestCase):
         self.assertIn("error", json.loads(err.getvalue()))
 
     def test_invalid_snapshot_does_not_replace_index(self):
-        self.a.meta["relations"].append({"type": "depends_on", "target": "missing"})
+        self.a.meta["relations"].append({"type": "related_nodes", "target": "missing"})
         self.save(self.a)
         # Dirty working files are not an accepted snapshot.
         self.assertEqual(self.index.rebuild(self.repo, "main", self.embed)["revision"], self.rev)
@@ -423,7 +457,7 @@ class KnowledgeTest(unittest.TestCase):
         self.assertEqual([n["metadata"]["id"] for n in result["results"]], ["A", "C"])
 
     def test_incremental_and_fresh_index_have_equivalent_graph_and_queries(self):
-        self.a.meta["relations"] = [{"type": "depends_on", "target": "C"}]
+        self.a.meta["relations"] = [{"type": "related_nodes", "target": "C"}]
         self.a.body += " Reconcile retained records before deploying a new encoding."
         self.c.meta["anchors"] = [{"repo": "orders", "path": "state.py", "role": "evidence", "verified_commit": self.rev}]
         self.save(self.a, self.c, node("D", "Delayed archive replays"))
@@ -496,7 +530,7 @@ class KnowledgeTest(unittest.TestCase):
         self.assertFalse((self.root / "different").exists())
 
     def test_local_acceptance_refreshes_index_without_push(self):
-        proposal = self.proposal(node("D", relations=[("depends_on", "B")]))
+        proposal = self.proposal(node("D", relations=[("related_nodes", "B")]))
         report = review(self.config, proposal["branch"], self.index, self.embed)
         out = io.StringIO()
         with redirect_stdout(out):

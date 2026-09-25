@@ -357,8 +357,8 @@ def score_capture(trial, scorecard=None):
         errors.append("changed condition did not revise the affected existing constraint")
     if expected.get("forbid_verified") and any(n.meta["evidence_state"] == "verified" for n in changed.values()):
         errors.append("unverified evidence was promoted to verified")
-    if expected.get("required_target") and not any(r["target"] == expected["required_target"] and
-            r["type"] in ("constrained_by", "depends_on", "supported_by") for n in changed.values() for r in n.meta["relations"]):
+    if expected.get("required_target") and not any(r["target"] == expected["required_target"]
+            for n in changed.values() for r in n.meta["relations"]):
         errors.append("shared constraint was not reused through a meaningful relationship")
     semantic = read(Path(scorecard)) if scorecard else None
     required = ("admission", "evidence", "reuse", "relationships", "scope")

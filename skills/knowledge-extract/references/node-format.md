@@ -21,10 +21,23 @@ kind (test, commit, task, human, document, experiment) and a reference. Verified
 evidence additionally requires verification.checked_at, revision and checked.
 Reported/inferred nodes may have empty verification. Evidence is not review approval.
 
-Relations contain type and target stable ID. Types: constrained_by, depends_on,
-supported_by, supersedes, related_to. Only the first three propagate dependency
-review. Directed edges are stored once. `aliases.json` maps retired IDs to live IDs;
-the validator rejects dangling links, collisions and alias cycles.
+Relations contain `type: related_nodes` and a target stable ID:
+
+```yaml
+relations:
+  - type: related_nodes
+    target: kn-journal-compatibility
+```
+
+Store each connection once; default context traversal follows it in both directions.
+Explain why the nodes matter together in the body, without assigning a dependency
+category. Connect useful knowledge, not every vaguely similar claim. Historical
+constrained_by/depends_on/supported_by/supersedes/related_to labels remain readable;
+new connections use related_nodes. Existing accepted files are not rewritten on
+read. Maintenance follows all connections in both directions as review candidates;
+a link alone does not establish dependency or invalidate either claim.
+`aliases.json` maps retired IDs to live IDs; the validator rejects dangling links,
+collisions and alias cycles.
 
 Body: explain situation, conclusion, concrete action, rationale/evidence, uncertainty
 and invalidation conditions. Maximum 24,000 characters per coherent node. Do not

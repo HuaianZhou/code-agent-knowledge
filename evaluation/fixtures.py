@@ -18,9 +18,9 @@ CLAIMS = {
         "A separately deployed recovery appliance reads archives for seven years; a writer rollout does not update it or migrate old data. "
         "Coordinate migrations and reader deployment before changing numeric meanings. Human operations guidance establishes this condition. "
         "Reassess once every supported reader and retained archive uses a versioned migrated format."),
-    "kn-writer-evolution": ("Order lifecycle feature implementation", "decision", .7, [("constrained_by", "kn-retained-format")],
+    "kn-writer-evolution": ("Order lifecycle feature implementation", "decision", .7, [("related_nodes", "kn-retained-format")],
         "When adding an order lifecycle state, choose its numeric representation using the retained-format constraint and test current and historical records."),
-    "kn-recovery-check": ("Replay verification for export changes", "verification_rule", .8, [("depends_on", "kn-retained-format")],
+    "kn-recovery-check": ("Replay verification for export changes", "verification_rule", .8, [("related_nodes", "kn-retained-format")],
         "For export and replay changes, test retained journals against supported recovery readers. Verify compatibility before rollout; do not infer deployment from a code merge."),
     "kn-logging": ("Drain diagnostic queues at shutdown", "pitfall", .6, [],
         "During process shutdown, drain queued diagnostics before terminating the consumer, or the diagnostic tail can be lost. Recheck when logging becomes synchronous."),

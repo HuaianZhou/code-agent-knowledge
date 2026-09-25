@@ -144,3 +144,9 @@ context truncation prevent a claim of additional graph benefit. See the
 ## Standing capture and on-demand retrieval, 2026-09-25
 
 Two new preparation tests passed with `python -m unittest tests.test_task_end_trigger tests.test_on_demand -v`. Five isolated Astra sessions completed with separate passing coding grades. Standing capture proposed one qualifying constraint and correctly wrote nothing for the code-only control. On-demand export and recovery retrieved relevant evidence before edits; inventory skipped retrieval. All accepted stores remained unchanged. Frozen preparation/policy/grader hashes matched after execution. The usage-interrupted export attempt is retained separately; its fresh retry passed. See the [workflow report](results/agent-workflows-20260925.md) for evidence and limits.
+
+## Generic graph connections, 2026-09-25
+
+New links use `type: related_nodes` inside the existing `relations` list. Context traversal remains bidirectional by default. Impact review now traverses all connections in both directions, including legacy labels, and only suggests review; it does not change accepted status. This may expand candidate lists to the entire connected component. Existing accepted Markdown and historical agent reports remain unchanged.
+
+`python -m unittest discover -s tests -v`: 52 tests passed. Coverage includes generic proposals/acceptance/merge redirects, traversal cycles and budgets, connected impact from either endpoint, disconnected-node exclusion, and compatibility with every legacy relationship label. Both updated skills passed the skill-creator validator; `git diff --check` passed. Historical agent experiments used the earlier relationship schema; they were not rerun for this change.

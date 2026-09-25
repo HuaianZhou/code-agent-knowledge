@@ -59,7 +59,8 @@ knowledge-agent --config CONFIG context NODE_ID --all-statuses --depth 2 --max-n
 ```
 
 Use anchor lookup for known code. Read full plausible matches and expand relevant
-relationships to find shared constraints. Broaden a scoped search without `--repo`
+connections to find shared constraints. Use `related_nodes` for new links and
+explain their relevance in the body; default graph traversal works in both directions. Broaden a scoped search without `--repo`
 when needed. In lexical mode try alternative terms and anchors; it does not reliably
 match paraphrases. Inspect truncation before claiming complete search coverage.
 

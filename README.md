@@ -245,6 +245,24 @@ Set `provider` in config to `github` or `gitlab` and authenticate `gh` or `glab`
 the second command. Requests are drafts. No provider is selected by default. These
 optional adapters are not exercised against a live service by the local tests.
 
+## Graph connections
+
+Use one generic relationship for new connections:
+
+```yaml
+relations:
+  - type: related_nodes
+    target: kn-journal-compatibility
+```
+
+Store a link once. `context` traverses both directions by default, within its depth,
+node and context budgets. Explain the connection in the node body rather than
+choosing a dependency type. `search` retrieves matches; `context` expands the graph.
+Legacy typed links remain readable and retain their original labels for provenance.
+They participate in traversal and connected maintenance review just like new links;
+accepted Markdown and historical evaluation reports are not rewritten automatically.
+The `--direction` and `--relation` options remain available for explicit filtering.
+
 ## Maintenance
 
 ```text
@@ -255,8 +273,8 @@ knowledge-agent maintain --repositories /path/to/repositories.json --duplicates
 ```
 
 The repositories file maps identities to checkouts, e.g. `{"orders":"/path/to/orders"}`.
-Impact follows incoming constrained_by/depends_on/supported_by edges and suggests
-needs_review; related_to does not propagate. Git rename detection proposes anchor
+Impact follows all connections in both directions and suggests review candidates.
+A connection does not imply dependency or invalidate a claim. Git rename detection proposes anchor
 moves. Maintenance reports missing paths/revisions, changed anchored code and missing
 symbols (lexical check, not a language parser). Reports do not silently rewrite
 claims or prove validity; propose reviewed changes through the same workflow.

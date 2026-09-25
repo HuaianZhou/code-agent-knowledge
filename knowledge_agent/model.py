@@ -15,8 +15,10 @@ class KnowledgeError(ValueError):
 
 STATUSES = {"active", "needs_review", "superseded", "archived"}
 TYPES = {"constraint", "decision", "pitfall", "mechanism", "verification_rule"}
-RELATIONS = {"constrained_by", "depends_on", "supported_by", "supersedes", "related_to"}
-DEPENDENCIES = {"constrained_by", "depends_on", "supported_by"}
+# New connections are generic. Accept historical labels so existing repositories
+# and pinned snapshots remain readable without rewriting accepted Git history.
+LEGACY_RELATIONS = {"constrained_by", "depends_on", "supported_by", "supersedes", "related_to"}
+RELATIONS = {"related_nodes"} | LEGACY_RELATIONS
 ID = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,127}$")
 SHA = re.compile(r"^[0-9a-f]{40}([0-9a-f]{24})?$")
 

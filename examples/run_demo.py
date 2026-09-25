@@ -73,11 +73,11 @@ def replay(stream):
          "independent recovery deployment; the writer enum and recovery decoder establish the encoding dependency. "
          "Reassess when versioned journal records and migration coverage are established."),
         ("kn-writer-change", "Append new order states without renumbering existing values", "decision",
-         [{"type": "constrained_by", "target": "kn-journal-compatibility"}],
+         [{"type": "related_nodes", "target": "kn-journal-compatibility"}],
          "When adding a writer state, allocate a new numeric value and verify old-journal replay. "
          "Do not infer that upgrading the writer also upgrades recovery. Reassess for a versioned format."),
         ("kn-recovery-change", "Check retained journal versions before changing recovery", "verification_rule",
-         [{"type": "depends_on", "target": "kn-journal-compatibility"}],
+         [{"type": "related_nodes", "target": "kn-journal-compatibility"}],
          "When changing recovery, replay retained records from supported writer versions before rollout. "
          "The retained-data constraint applies independently of writer deployment. Reassess after migration.")]
     manifest = {"nodes": [], "admission": [], "operations": {}}

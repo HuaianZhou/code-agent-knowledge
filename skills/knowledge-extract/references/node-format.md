@@ -1,8 +1,12 @@
 # Nodes and proposal manifests
 
+## File layout
+
 Nodes live under `nodes/` in the **knowledge** repository. Each file contains YAML
 frontmatter between `---` lines and a nonempty Markdown body. IDs are stable and
 independent of paths. Unknown metadata is retained for project extensions.
+
+## Required metadata
 
 Required fields: `schema_version: 1`, `id`, `title`, `type`, `tags`, `weight`,
 `status`, `scope`, `evidence_state`, `anchors`, `relations`, `sources`, `verification`.
@@ -12,14 +16,23 @@ Weight is finite in [0,1]; suggested rubric: 0.9 severe consequence/broad reuse,
 0.6 recurring local constraint, 0.3 narrow but meaningful action. It is neither
 confidence nor relevance and never decays automatically.
 
+## Scope
+
 `scope` requires string lists `repositories` and `conditions`; an empty repository
 list means cross-repository. Extra version/environment fields are preserved. Only
 repository filtering is deterministic; the agent assesses conditions and versions.
-`anchors` entries require repo, safe relative path, role (`evidence` or
-`affected_code`) and full verified_commit SHA; symbol is optional. Sources require
-kind (test, commit, task, human, document, experiment) and a reference. Verified
+## Sources and evidence
+
+Sources require kind (test, commit, task, human, document, experiment) and a reference. Verified
 evidence additionally requires verification.checked_at, revision and checked.
 Reported/inferred nodes may have empty verification. Evidence is not review approval.
+
+## Code anchors
+
+`anchors` entries require repo, safe relative path, role (`evidence` or
+`affected_code`) and full verified_commit SHA; symbol is optional.
+
+## Related nodes
 
 Relations contain `type: related_nodes` and a target stable ID:
 
@@ -39,10 +52,14 @@ a link alone does not establish dependency or invalidate either claim.
 `aliases.json` maps retired IDs to live IDs; the validator rejects dangling links,
 collisions and alias cycles.
 
-Body: explain situation, conclusion, concrete action, rationale/evidence, uncertainty
+## Node body
+
+Explain situation, conclusion, concrete action, rationale/evidence, uncertainty
 and invalidation conditions. Maximum 24,000 characters per coherent node. Do not
 paste a transcript or copy a skill. Use the required fields above when composing
 a node; preserve additional metadata when updating an existing node.
+
+## Proposal manifest
 
 The `propose` / `task-end` manifest has this shape (node paths resolve relative to
 the manifest; admission text must contain actual reasoning):
@@ -63,10 +80,17 @@ the manifest; admission text must contain actual reasoning):
 }
 ```
 
-Zero candidates: `{"nodes": [], "admission": []}`. A merge supplies a revised,
-admitted survivor plus `"merges": {"retired-id": "surviving-id"}`. Existing source
-provenance is retained, affected edges are rewritten, and the retired ID redirects.
 Gate declarations are auditable agent judgments; code cannot prove their truth.
+
+## Empty proposals
+
+Zero candidates: `{"nodes": [], "admission": []}`.
+
+## Creates, updates and merges
+
+A merge supplies a revised, admitted survivor plus
+`"merges": {"retired-id": "surviving-id"}`. Existing source provenance is retained,
+affected edges are rewritten, and the retired ID redirects.
 
 Every supplied node requires an explicit entry in `operations`: `create` requires
 an unused ID; `update` requires an existing ID in the accepted snapshot. Missing,

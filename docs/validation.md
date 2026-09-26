@@ -154,3 +154,7 @@ New links use `type: related_nodes` inside the existing `relations` list. Contex
 ## Separate retrieval skill, 2026-09-26
 
 `python -m unittest tests.test_on_demand tests.test_task_end_trigger -v`: both preparation tests passed. Both knowledge-retrieve and knowledge-extract passed skill validation. Three fresh Astra coding sessions passed independent consumer grades; export/recovery loaded the new retrieval skill, inventory skipped retrieval, and no capture/proposal commands or knowledge changes occurred. Frozen skill/policy/preparation/grader hashes matched. See the [report](results/retrieval-skill-split-20260926.md) for evidence and limits, including the supplied example query and absence of a fresh capture run.
+
+## Retrieval entry-route policy and evaluation design, 2026-09-27
+
+Updated knowledge-retrieve for optional exact metadata entry, direct content search for detailed queries, anchor entry, and broadening when filtered results are empty or insufficient. Four tests passed with `python -m unittest tests.test_retrieval_routes tests.test_on_demand -v`; skill validation passed. Eight isolated semantic-configured trials were prepared in `.demo/retrieval-routes-20260927`. No agent or semantic-ranking run was performed for this new suite. The mechanical tests use lexical indexing and do not prove semantic recall or agent policy compliance. See the [evaluation protocol](retrieval-route-evaluation.md) for private criteria, calibration and actual agent-run instructions.

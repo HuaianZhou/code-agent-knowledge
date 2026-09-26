@@ -208,6 +208,10 @@ snapshot. `rebuild-index --force` recreates derived content.
 
 ## Retrieval, capture and review
 
+Retrieval can start from known metadata, a detailed content query, or a source-code
+anchor. Empty or insufficient metadata results should be broadened to content
+search without the uncertain filters. See the [evaluation cases](docs/retrieval-route-evaluation.md).
+
 Retrieval runs from a task or broad topic and ends with applicable findings, without
 knowledge writes. Capture runs separately from conversation evidence and ends with
 a proposal or an explicit no-change result. Maintenance reviews existing knowledge

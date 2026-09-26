@@ -77,3 +77,11 @@ retrieval-only workflow. A later capture invocation is separate from retrieval.
 The [dedicated-skill validation](results/retrieval-skill-split-20260926.md) reran
 three fresh Astra tasks after this split: both export tasks retrieved through the
 new skill, inventory skipped retrieval, and all knowledge stores stayed unchanged.
+
+## Metadata, content and anchor entry routes
+
+The skill now treats known tag/type filters as an optional entry, uses content
+search directly for detailed questions without confident metadata, and broadens
+empty or insufficient filtered results. Source anchors provide another entry.
+The [retrieval-route evaluation](retrieval-route-evaluation.md) defines eight
+scenarios and separates mechanical checks from actual agent judgments.

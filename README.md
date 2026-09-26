@@ -206,10 +206,16 @@ change rebuilds all vectors. One transaction publishes the complete snapshot;
 concurrent writers serialize, failed writes roll back, and readers see one coherent
 snapshot. `rebuild-index --force` recreates derived content.
 
-## Extraction and review
+## Retrieval, capture and review
+
+Retrieval runs from a task or broad topic and ends with applicable findings, without
+knowledge writes. Capture runs separately from conversation evidence and ends with
+a proposal or an explicit no-change result. Maintenance reviews existing knowledge
+and proposals. Each has its own entry point; retrieval never jumps into capture steps.
 
 The working agent, not the CLI, extracts and judges knowledge. Bundled skills:
-[extraction/usage](skills/knowledge-extract/SKILL.md) and
+[retrieval](skills/knowledge-retrieve/SKILL.md),
+[capture](skills/knowledge-extract/SKILL.md) and
 [maintenance](skills/knowledge-maintain/SKILL.md). Install these folders in your
 agent's skill directory, then add a host instruction to invoke extraction before
 the final task response while conversation evidence is available. Installation

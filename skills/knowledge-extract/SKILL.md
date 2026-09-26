@@ -1,6 +1,6 @@
 ---
 name: knowledge-extract
-description: Capture actionable project knowledge from the current coding-agent conversation and prepare Git proposals with knowledge-agent. Use at task completion, after an important correction or discovery, or before compaction; also retrieve existing knowledge when invoked at task start.
+description: Capture actionable project knowledge from the current coding-agent conversation and prepare Git proposals with knowledge-agent. Use at task completion, after an important correction or discovery, or before compaction. For finding existing guidance for a task or topic, use knowledge-retrieve instead.
 ---
 
 # Capture workflow
@@ -8,6 +8,8 @@ description: Capture actionable project knowledge from the current coding-agent 
 Execute these steps while conversation and working evidence are available. Deliver
 either an explicit no-change result or a committed proposal with submission status.
 You make semantic decisions; the CLI validates and stores the result.
+This is a capture-only workflow. Its searches compare candidates with existing
+knowledge; they are not an entry route for task-start retrieval.
 
 ## 1. Open the knowledge store
 
@@ -28,9 +30,6 @@ If sync fails but `status` shows a usable index, use its `indexed_revision` and
 report stale state. If neither is usable, report the setup error; do not claim
 capture succeeded. Run `setup` only when installation/setup is in scope.
 
-**Task-start invocation:** execute the searches, reads and graph expansion in step
-3 for the upcoming task, check applicability, then stop. Capture runs at task end.
-
 ## 2. Extract and screen candidates
 
 Review the current conversation, human corrections, experiments, failed approaches
@@ -46,7 +45,7 @@ qualify and should reference the skill. Reject task summaries and temporary deta
 **No survivors:** go to step 5 with an empty manifest. Retain rejection reasons for
 the final report. Never create a node to meet a quota.
 
-## 3. Search and read existing knowledge
+## 3. Compare capture candidates with existing knowledge
 
 For each survivor, search using its conclusion/action and then its underlying
 condition. Substitute actual queries, repository identity and paths:

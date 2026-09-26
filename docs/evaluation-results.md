@@ -115,3 +115,7 @@ local proposal and zero writes on the control. Both export agents retrieved and
 applied operational constraints before editing; the inventory control skipped
 retrieval. All five coding grades passed. The quota-interrupted export attempt is
 retained separately. These results do not isolate graph benefit or prove reliability.
+
+## Dedicated retrieval skill, 2026-09-26
+
+The [skill separation follow-up](results/retrieval-skill-split-20260926.md) completed three fresh Astra sessions. Both export tasks used knowledge-retrieve before editing; the inventory control skipped retrieval. All consumer grades passed, with no knowledge writes or capture/proposal calls. This tests the separate workflow, not guaranteed complex-task compliance.

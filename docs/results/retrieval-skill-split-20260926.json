@@ -1,0 +1,323 @@
+{
+  "kind": "on_demand_retrieval",
+  "experiments": [
+    {
+      "run_order": [
+        "recovery",
+        "export",
+        "inventory"
+      ],
+      "model": "gpt-6-astra",
+      "source_revision": "382f370abb14042ede4539f53e31619abb508eac",
+      "source_hashes": {
+        "evaluation/on_demand.py": "12fa04dcb1f0c1af86d8ad85bcc2f48b59bdf222b2dc56f14aab226a6ee3c8e6",
+        "integrations/codex/retrieval.fragment.md": "4703de5a81c5a8ef02127e7f232625f8a21419d6c3c0caf4ce4435f49cee289f",
+        "skills/knowledge-retrieve/SKILL.md": "f11e3f7be4d1977166418973ec92d9287cb6515c9060683a0864f2a8c0208c30",
+        "evaluation/fulfillment_grader.py": "358fe3ddae1792d8591932dab2db6e96487742c9c2d65d7b8f9be9d5753fec7d"
+      },
+      "criteria": "Review native trace for agent-chosen queries, relevant evidence before implementation, and appropriate restraint on inventory. Separate consumer grades assess code. No fixed node IDs or queries supplied to actor.",
+      "limitation": "Three synthetic sessions with standing retrieval policy; not unaided discovery, no end-to-end retrieval token cap, not an equal-cost comparison to injected contexts."
+    }
+  ],
+  "trials": [
+    {
+      "task": "recovery",
+      "directory": ".demo\\retrieval-skill-split-20260925\\recovery",
+      "status": "passed",
+      "request": {
+        "task": "Modernize write_recovery to use JSONL v2 by default for new sites while honoring existing deployment exceptions. Preserve journal reduction semantics and explicit format overrides. Run relevant tests.",
+        "project": "/workspace/project",
+        "model": "gpt-6-astra",
+        "max_output_tokens": 8000
+      },
+      "private": {
+        "task": "recovery",
+        "knowledge_base": "fea598f48adf675c623dd1d8a9c8929d05e60b55",
+        "source_revision": "382f370abb14042ede4539f53e31619abb508eac",
+        "starting_files": {
+          "AGENTS.md": "bda34a8e1f7afb15fac0c07afb6a8ce6f8fbdf882e1d819fc462cd40d978e11a",
+          "exporter.py": "efdc756902f40ce91d271d2bcb6ed12e0ada8f74dbc60c3ae9a49e0bfb00751e",
+          "inventory.py": "9a2ce7a040fe8654e8714b084153d210b37da9f2e1b30e83609804b533b50e91",
+          "README.md": "22d2af84562d4b6642fa2b5a22183e09d31bd107c3270acecc1f5640e701bf71",
+          "recovery.py": "94ba3b5fb1b8d232eec4e6f7093f2a404bf86cda132f7abd6662b4323ca57cac",
+          "test_public.py": "24fc5ed4802cd8ed94f955728f8f6a145438d810fe5d3873f98e3d111e7e9fb4",
+          "wire_formats.py": "369a5a14e12cad42126a5160c57a14a916dc94414367a360b7ef29a37e3a93bb"
+        },
+        "policy_sha256": "ff775eb14ccc6930bf4d9009381890369c3936facdc4849563793024c868eb9f"
+      },
+      "execution": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 117.14100000000326,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "coding_grade": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.48399999999674037,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "grader_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+      "infrastructure_error": null,
+      "knowledge_cli_commands": [
+        {
+          "event_index": 10,
+          "id": "item_4",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json synchronize'",
+          "aggregated_output": "\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 103/103 [00:00<00:00, 1576.01it/s]\n/input/tool-source/knowledge_agent/index.py:28: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.\n  self.dimensions = self.model.get_sentence_embedding_dimension()\n[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (261 > 256). Running this sequence through the model will result in indexing errors\n{\n  \"revision\": \"fea598f48adf675c623dd1d8a9c8929d05e60b55\",\n  \"nodes\": 3,\n  \"embedded\": 3,\n  \"deleted\": 0,\n  \"embedding\": {\n    \"backend\": \"sentence-transformers\",\n    \"model\": \"sentence-transformers/all-MiniLM-L6-v2\",\n    \"revision\": \"1110a243fdf4706b3f48f1d95db1a4f5529b4d41\",\n    \"dimensions\": 384,\n    \"payload_policy\": 1,\n    \"chunk_policy\": \"token-window-mean-v1\",\n    \"distance\": \"cosine\",\n    \"schema\": 1\n  },\n  \"stale\": false,\n  \"mode\": \"local\"\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 13,
+          "id": "item_6",
+          "type": "command_execution",
+          "command": "/bin/bash -lc \"python -m knowledge_agent --config /workspace/config.json search 'recovery export deployment compatibility' --repo fulfillment --revision fea598f48adf675c623dd1d8a9c8929d05e60b55\"",
+          "aggregated_output": "\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 103/103 [00:00<00:00, 3004.56it/s]\n/input/tool-source/knowledge_agent/index.py:28: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.\n  self.dimensions = self.model.get_sentence_embedding_dimension()\n{\n  \"revision\": \"fea598f48adf675c623dd1d8a9c8929d05e60b55\",\n  \"ordering\": \"semantic top-50 candidates, ordered by relevance\",\n  \"embedding\": {\n    \"backend\": \"sentence-transformers\",\n    \"chunk_policy\": \"token-window-mean-v1\",\n    \"dimensions\": 384,\n    \"distance\": \"cosine\",\n    \"model\": \"sentence-transformers/all-MiniLM-L6-v2\",\n    \"payload_policy\": 1,\n    \"revision\": \"1110a243fdf4706b3f48f1d95db1a4f5529b4d41\",\n    \"schema\": 1\n  },\n  \"results\": [\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-normal-export-receiver-compatibility\",\n        \"title\": \"Normal export must preserve north receiver compatibility\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing normal fulfillment delivery or its format selection\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"For normal fulfillment delivery, preserve north's current compatible routing under the linked receiver contract. Do not make a service-wide format/default change that sends an unsupported encoding to north merely because the encoder supports it or other sites accept it.\\n\\nOperations F-17 supplies the deployment rule; F-18 explicitly makes normal and recovery exports subject to the same receiver obligation. When changing normal-export format selection, inspect recovery export as well and coordinate any receiver migration with Operations. The linked constraint owns site capabilities and the migration gate, rather than duplicating them here.\\n\\nThis decision applies the reported Operations contract to the normal delivery entry point. The repository's explicit-format tests establish encoder behavior only, not deployed routing or receiver readiness. The streaming change to write_batch preserves format selection and does not establish a migration. Revisit this decision if the shared receiver contract or the normal delivery destination changes.\",\n      \"path\": \"nodes/kn-normal-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"score\": 0.5207223296165466\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-north-receiver-contract\",\n        \"title\": \"North receiver deployment governs batch format\",\n        \"type\": \"constraint\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.9,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"North receiver migration has not been confirmed by Operations\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"wire_formats.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"North's fulfillment appliance is deployed independently of this service. Operations handoff F-17 reports that it accepts only CSV v1 with fields id,sku,quantity and cannot ingest JSONL v2. South and newly onboarded sites accept JSONL v2. Shipping this service does not upgrade north's receiver.\\n\\nPreserve north's CSV routing until Operations confirms its receiver migration. Do not infer receiver capability from local encoder support, service releases, or passing tests. JSONL v2 is compatible with the reported south/new-site deployments; this is not a mandate to change their routing.\\n\\nIncident F-18 reports that normal deliveries and disaster-recovery replacements terminate at the same ingestion gateway and are polled by the same north appliance. Changes to this receiver contract require review of both export paths, even though they have different service entry points.\\n\\nEvidence is reported by Operations (F-17 and F-18), not independently verified by repository tests. Code anchors identify affected code at the inspected baseline, not evidence of deployment. Reassess this constraint when Operations confirms migration or reports a changed site capability or gateway topology; update both dependent export decisions then.\",\n      \"path\": \"nodes/kn-north-receiver-contract.md\",\n      \"warning\": null,\n      \"score\": 0.5048830807209015\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-recovery-export-receiver-compatibility\",\n        \"title\": \"Recovery replacements share the normal delivery receiver contract\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing disaster-recovery replacement export or receiver format contract\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"Disaster-recovery replacements are another delivery to the same north receiver, not a separate compatibility domain. Apply the linked receiver contract to recovery format selection, including when changing recovery independently of normal exports. Review both paths whenever the receiver contract changes.\\n\\nWhile preserving compatible output, recovery must continue reconstructing the latest shipment image with latest-upsert/delete semantics. A format migration must not replace that reconstruction with an export of raw historical events or otherwise resurrect deleted shipments. This is a required behavior from F-18; the implementation of replay_events itself does not warrant a separate knowledge node.\\n\\nThe cross-path receiver obligation is reported in Operations incident F-18 and grounded in F-17's deployment constraint. Local tests exercise latest upsert and deletion and explicit encoding, but cannot verify that the deployed appliance polls both paths or has migrated. Code anchors locate the affected recovery entry point only.\\n\\nReassess compatibility when Operations changes the receiver contract or reports a different recovery destination. Changes to reconstruction semantics require a separate explicit requirement; receiver migration alone does not invalidate latest-upsert/delete behavior.\",\n      \"path\": \"nodes/kn-recovery-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"score\": 0.3918455243110657\n    }\n  ]\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 17,
+          "id": "item_8",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json context kn-recovery-export-receiver-compatibility --depth 2 --max-nodes 6 --max-tokens 6000 --revision fea598f48adf675c623dd1d8a9c8929d05e60b55'",
+          "aggregated_output": "{\n  \"revision\": \"fea598f48adf675c623dd1d8a9c8929d05e60b55\",\n  \"results\": [\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-recovery-export-receiver-compatibility\",\n        \"title\": \"Recovery replacements share the normal delivery receiver contract\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing disaster-recovery replacement export or receiver format contract\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"Disaster-recovery replacements are another delivery to the same north receiver, not a separate compatibility domain. Apply the linked receiver contract to recovery format selection, including when changing recovery independently of normal exports. Review both paths whenever the receiver contract changes.\\n\\nWhile preserving compatible output, recovery must continue reconstructing the latest shipment image with latest-upsert/delete semantics. A format migration must not replace that reconstruction with an export of raw historical events or otherwise resurrect deleted shipments. This is a required behavior from F-18; the implementation of replay_events itself does not warrant a separate knowledge node.\\n\\nThe cross-path receiver obligation is reported in Operations incident F-18 and grounded in F-17's deployment constraint. Local tests exercise latest upsert and deletion and explicit encoding, but cannot verify that the deployed appliance polls both paths or has migrated. Code anchors locate the affected recovery entry point only.\\n\\nReassess compatibility when Operations changes the receiver contract or reports a different recovery destination. Changes to reconstruction semantics require a separate explicit requirement; receiver migration alone does not invalidate latest-upsert/delete behavior.\",\n      \"path\": \"nodes/kn-recovery-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"relationship_path\": []\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-north-receiver-contract\",\n        \"title\": \"North receiver deployment governs batch format\",\n        \"type\": \"constraint\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.9,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"North receiver migration has not been confirmed by Operations\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"wire_formats.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"North's fulfillment appliance is deployed independently of this service. Operations handoff F-17 reports that it accepts only CSV v1 with fields id,sku,quantity and cannot ingest JSONL v2. South and newly onboarded sites accept JSONL v2. Shipping this service does not upgrade north's receiver.\\n\\nPreserve north's CSV routing until Operations confirms its receiver migration. Do not infer receiver capability from local encoder support, service releases, or passing tests. JSONL v2 is compatible with the reported south/new-site deployments; this is not a mandate to change their routing.\\n\\nIncident F-18 reports that normal deliveries and disaster-recovery replacements terminate at the same ingestion gateway and are polled by the same north appliance. Changes to this receiver contract require review of both export paths, even though they have different service entry points.\\n\\nEvidence is reported by Operations (F-17 and F-18), not independently verified by repository tests. Code anchors identify affected code at the inspected baseline, not evidence of deployment. Reassess this constraint when Operations confirms migration or reports a changed site capability or gateway topology; update both dependent export decisions then.\",\n      \"path\": \"nodes/kn-north-receiver-contract.md\",\n      \"warning\": null,\n      \"relationship_path\": [\n        {\n          \"source\": \"kn-recovery-export-receiver-compatibility\",\n          \"target\": \"kn-north-receiver-contract\",\n          \"type\": \"constrained_by\",\n          \"direction\": \"out\"\n        }\n      ]\n    }\n  ],\n  \"truncated\": true,\n  \"truncation_reasons\": [\n    \"token_budget\"\n  ],\n  \"estimated_tokens\": 5046,\n  \"token_estimator\": \"conservative UTF-8 bytes of returned node records\"\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 19,
+          "id": "item_9",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json read kn-normal-export-receiver-compatibility --revision fea598f48adf675c623dd1d8a9c8929d05e60b55'",
+          "aggregated_output": "{\n  \"revision\": \"fea598f48adf675c623dd1d8a9c8929d05e60b55\",\n  \"requested_id\": \"kn-normal-export-receiver-compatibility\",\n  \"resolved_id\": \"kn-normal-export-receiver-compatibility\",\n  \"metadata\": {\n    \"schema_version\": 1,\n    \"id\": \"kn-normal-export-receiver-compatibility\",\n    \"title\": \"Normal export must preserve north receiver compatibility\",\n    \"type\": \"decision\",\n    \"tags\": [\n      \"fulfillment\",\n      \"receiver-compatibility\"\n    ],\n    \"weight\": 0.6,\n    \"status\": \"active\",\n    \"scope\": {\n      \"repositories\": [\n        \"fulfillment\"\n      ],\n      \"conditions\": [\n        \"Changing normal fulfillment delivery or its format selection\"\n      ]\n    },\n    \"evidence_state\": \"reported\",\n    \"anchors\": [\n      {\n        \"repo\": \"fulfillment\",\n        \"path\": \"exporter.py\",\n        \"role\": \"affected_code\",\n        \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n      }\n    ],\n    \"relations\": [\n      {\n        \"type\": \"constrained_by\",\n        \"target\": \"kn-north-receiver-contract\"\n      }\n    ],\n    \"sources\": [\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations handoff F-17\"\n      },\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations incident F-18\"\n      },\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n      }\n    ],\n    \"verification\": {}\n  },\n  \"body\": \"For normal fulfillment delivery, preserve north's current compatible routing under the linked receiver contract. Do not make a service-wide format/default change that sends an unsupported encoding to north merely because the encoder supports it or other sites accept it.\\n\\nOperations F-17 supplies the deployment rule; F-18 explicitly makes normal and recovery exports subject to the same receiver obligation. When changing normal-export format selection, inspect recovery export as well and coordinate any receiver migration with Operations. The linked constraint owns site capabilities and the migration gate, rather than duplicating them here.\\n\\nThis decision applies the reported Operations contract to the normal delivery entry point. The repository's explicit-format tests establish encoder behavior only, not deployed routing or receiver readiness. The streaming change to write_batch preserves format selection and does not establish a migration. Revisit this decision if the shared receiver contract or the normal delivery destination changes.\",\n  \"path\": \"nodes/kn-normal-export-receiver-compatibility.md\",\n  \"warning\": null\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "implementation_diffs": {
+        "exporter.py": "",
+        "inventory.py": "",
+        "recovery.py": "--- before/recovery.py\n+++ after/recovery.py\n@@ -14,6 +14,12 @@\n     return list(shipments.values())\n \n \n-def write_recovery(site, events, stream, format_name=\"csv-v1\"):\n-    \"\"\"Export a replacement batch after reconstructing the journal.\"\"\"\n+def write_recovery(site, events, stream, format_name=None):\n+    \"\"\"Reconstruct the journal and export using the site's default or an override.\n+\n+    Recovery defaults to JSONL v2 except for north's CSV v1 receiver.\n+    \"\"\"\n+    if format_name is None:\n+        # Operations F-17/F-18: retain CSV until north's migration is confirmed.\n+        format_name = \"csv-v1\" if site == \"north\" else \"jsonl-v2\"\n     encode(replay_events(events), stream, format_name)\n",
+        "test_public.py": "",
+        "wire_formats.py": ""
+      },
+      "knowledge_unchanged": true,
+      "proposal_branches": [],
+      "trace_sha256": "8790b2737a56bbe65e66435683867d2f75259021594af535eedae6f852a6c3ef",
+      "native_usage": {
+        "input_tokens": 189500,
+        "cached_input_tokens": 169344,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2318,
+        "reasoning_output_tokens": 57
+      },
+      "final_response": "Updated `write_recovery` to default to JSONL v2, retaining CSV v1 for north. Explicit overrides and latest-upsert/delete semantics are preserved.\n\nThe north exception follows Operations F-17/F-18 in `kn-north-receiver-contract` and its recovery decision, revision `fea598f`. Deployment facts remain Operations-reported.\n\nAdded regression coverage and documentation. All 8 tests pass with `python -m unittest discover -v`; `git diff --check` passes.",
+      "review": {
+        "reviewer": "Parent Codex evaluator, not blind human review",
+        "passes": true,
+        "skill_read_event": 6,
+        "retrieval_events": [
+          13,
+          17,
+          19
+        ],
+        "first_edit_event": 22,
+        "evidence": "Read the dedicated knowledge-retrieve skill. Search returned the reported receiver constraint and recovery decision; graph context was truncated and followed by a direct read of the normal-export decision. Event 20 states the applicable north CSV exception before event 22 edits. Actual recovery code retains replay semantics and explicit overrides while defaulting other sites to JSONL. Separate private consumer grader passed. No capture/proposal commands in native trace.",
+        "limitation": "Recovery query follows the illustrative query in the skill. This is a workflow-boundary test, not proof of unaided query formulation or complex-task reliability."
+      }
+    },
+    {
+      "task": "export",
+      "directory": ".demo\\retrieval-skill-split-20260925\\export",
+      "status": "passed",
+      "request": {
+        "task": "Modernize write_batch: use JSONL v2 by default for new sites, while honoring existing deployment exceptions. Preserve explicit format overrides and iterable inputs. Run relevant tests.",
+        "project": "/workspace/project",
+        "model": "gpt-6-astra",
+        "max_output_tokens": 8000
+      },
+      "private": {
+        "task": "export",
+        "knowledge_base": "5cb2812298e18a1386504a6f9a6771f3a6d9bf66",
+        "source_revision": "382f370abb14042ede4539f53e31619abb508eac",
+        "starting_files": {
+          "AGENTS.md": "bda34a8e1f7afb15fac0c07afb6a8ce6f8fbdf882e1d819fc462cd40d978e11a",
+          "exporter.py": "efdc756902f40ce91d271d2bcb6ed12e0ada8f74dbc60c3ae9a49e0bfb00751e",
+          "inventory.py": "9a2ce7a040fe8654e8714b084153d210b37da9f2e1b30e83609804b533b50e91",
+          "README.md": "22d2af84562d4b6642fa2b5a22183e09d31bd107c3270acecc1f5640e701bf71",
+          "recovery.py": "94ba3b5fb1b8d232eec4e6f7093f2a404bf86cda132f7abd6662b4323ca57cac",
+          "test_public.py": "24fc5ed4802cd8ed94f955728f8f6a145438d810fe5d3873f98e3d111e7e9fb4",
+          "wire_formats.py": "369a5a14e12cad42126a5160c57a14a916dc94414367a360b7ef29a37e3a93bb"
+        },
+        "policy_sha256": "ff775eb14ccc6930bf4d9009381890369c3936facdc4849563793024c868eb9f"
+      },
+      "execution": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 104.51500000001397,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "coding_grade": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.5150000000139698,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "grader_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n",
+      "infrastructure_error": null,
+      "knowledge_cli_commands": [
+        {
+          "event_index": 10,
+          "id": "item_4",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'cat /input/repositories.json && python -m knowledge_agent --config /workspace/config.json synchronize'",
+          "aggregated_output": "\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 103/103 [00:00<00:00, 3017.59it/s]\n/input/tool-source/knowledge_agent/index.py:28: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.\n  self.dimensions = self.model.get_sentence_embedding_dimension()\n[transformers] Token indices sequence length is longer than the specified maximum sequence length for this model (261 > 256). Running this sequence through the model will result in indexing errors\n{\n  \"revision\": \"5cb2812298e18a1386504a6f9a6771f3a6d9bf66\",\n  \"nodes\": 3,\n  \"embedded\": 3,\n  \"deleted\": 0,\n  \"embedding\": {\n    \"backend\": \"sentence-transformers\",\n    \"model\": \"sentence-transformers/all-MiniLM-L6-v2\",\n    \"revision\": \"1110a243fdf4706b3f48f1d95db1a4f5529b4d41\",\n    \"dimensions\": 384,\n    \"payload_policy\": 1,\n    \"chunk_policy\": \"token-window-mean-v1\",\n    \"distance\": \"cosine\",\n    \"schema\": 1\n  },\n  \"stale\": false,\n  \"mode\": \"local\"\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 15,
+          "id": "item_7",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json search \"write_batch deployment format exceptions JSONL CSV\" --repo fulfillment --revision 5cb2812298e18a1386504a6f9a6771f3a6d9bf66'",
+          "aggregated_output": "\rLoading weights:   0%|          | 0/103 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 103/103 [00:00<00:00, 2858.23it/s]\n/input/tool-source/knowledge_agent/index.py:28: FutureWarning: The `get_sentence_embedding_dimension` method has been renamed to `get_embedding_dimension`.\n  self.dimensions = self.model.get_sentence_embedding_dimension()\n{\n  \"revision\": \"5cb2812298e18a1386504a6f9a6771f3a6d9bf66\",\n  \"ordering\": \"semantic top-50 candidates, ordered by relevance\",\n  \"embedding\": {\n    \"backend\": \"sentence-transformers\",\n    \"chunk_policy\": \"token-window-mean-v1\",\n    \"dimensions\": 384,\n    \"distance\": \"cosine\",\n    \"model\": \"sentence-transformers/all-MiniLM-L6-v2\",\n    \"payload_policy\": 1,\n    \"revision\": \"1110a243fdf4706b3f48f1d95db1a4f5529b4d41\",\n    \"schema\": 1\n  },\n  \"results\": [\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-north-receiver-contract\",\n        \"title\": \"North receiver deployment governs batch format\",\n        \"type\": \"constraint\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.9,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"North receiver migration has not been confirmed by Operations\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"wire_formats.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"North's fulfillment appliance is deployed independently of this service. Operations handoff F-17 reports that it accepts only CSV v1 with fields id,sku,quantity and cannot ingest JSONL v2. South and newly onboarded sites accept JSONL v2. Shipping this service does not upgrade north's receiver.\\n\\nPreserve north's CSV routing until Operations confirms its receiver migration. Do not infer receiver capability from local encoder support, service releases, or passing tests. JSONL v2 is compatible with the reported south/new-site deployments; this is not a mandate to change their routing.\\n\\nIncident F-18 reports that normal deliveries and disaster-recovery replacements terminate at the same ingestion gateway and are polled by the same north appliance. Changes to this receiver contract require review of both export paths, even though they have different service entry points.\\n\\nEvidence is reported by Operations (F-17 and F-18), not independently verified by repository tests. Code anchors identify affected code at the inspected baseline, not evidence of deployment. Reassess this constraint when Operations confirms migration or reports a changed site capability or gateway topology; update both dependent export decisions then.\",\n      \"path\": \"nodes/kn-north-receiver-contract.md\",\n      \"warning\": null,\n      \"score\": 0.28132396936416626\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-normal-export-receiver-compatibility\",\n        \"title\": \"Normal export must preserve north receiver compatibility\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing normal fulfillment delivery or its format selection\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"For normal fulfillment delivery, preserve north's current compatible routing under the linked receiver contract. Do not make a service-wide format/default change that sends an unsupported encoding to north merely because the encoder supports it or other sites accept it.\\n\\nOperations F-17 supplies the deployment rule; F-18 explicitly makes normal and recovery exports subject to the same receiver obligation. When changing normal-export format selection, inspect recovery export as well and coordinate any receiver migration with Operations. The linked constraint owns site capabilities and the migration gate, rather than duplicating them here.\\n\\nThis decision applies the reported Operations contract to the normal delivery entry point. The repository's explicit-format tests establish encoder behavior only, not deployed routing or receiver readiness. The streaming change to write_batch preserves format selection and does not establish a migration. Revisit this decision if the shared receiver contract or the normal delivery destination changes.\",\n      \"path\": \"nodes/kn-normal-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"score\": 0.23229360580444336\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-recovery-export-receiver-compatibility\",\n        \"title\": \"Recovery replacements share the normal delivery receiver contract\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing disaster-recovery replacement export or receiver format contract\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"Disaster-recovery replacements are another delivery to the same north receiver, not a separate compatibility domain. Apply the linked receiver contract to recovery format selection, including when changing recovery independently of normal exports. Review both paths whenever the receiver contract changes.\\n\\nWhile preserving compatible output, recovery must continue reconstructing the latest shipment image with latest-upsert/delete semantics. A format migration must not replace that reconstruction with an export of raw historical events or otherwise resurrect deleted shipments. This is a required behavior from F-18; the implementation of replay_events itself does not warrant a separate knowledge node.\\n\\nThe cross-path receiver obligation is reported in Operations incident F-18 and grounded in F-17's deployment constraint. Local tests exercise latest upsert and deletion and explicit encoding, but cannot verify that the deployed appliance polls both paths or has migrated. Code anchors locate the affected recovery entry point only.\\n\\nReassess compatibility when Operations changes the receiver contract or reports a different recovery destination. Changes to reconstruction semantics require a separate explicit requirement; receiver migration alone does not invalidate latest-upsert/delete behavior.\",\n      \"path\": \"nodes/kn-recovery-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"score\": 0.05698084831237793\n    }\n  ]\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 17,
+          "id": "item_8",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json context kn-north-receiver-contract --depth 2 --max-nodes 6 --max-tokens 6000 --revision 5cb2812298e18a1386504a6f9a6771f3a6d9bf66'",
+          "aggregated_output": "{\n  \"revision\": \"5cb2812298e18a1386504a6f9a6771f3a6d9bf66\",\n  \"results\": [\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-north-receiver-contract\",\n        \"title\": \"North receiver deployment governs batch format\",\n        \"type\": \"constraint\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.9,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"North receiver migration has not been confirmed by Operations\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"recovery.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          },\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"wire_formats.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"North's fulfillment appliance is deployed independently of this service. Operations handoff F-17 reports that it accepts only CSV v1 with fields id,sku,quantity and cannot ingest JSONL v2. South and newly onboarded sites accept JSONL v2. Shipping this service does not upgrade north's receiver.\\n\\nPreserve north's CSV routing until Operations confirms its receiver migration. Do not infer receiver capability from local encoder support, service releases, or passing tests. JSONL v2 is compatible with the reported south/new-site deployments; this is not a mandate to change their routing.\\n\\nIncident F-18 reports that normal deliveries and disaster-recovery replacements terminate at the same ingestion gateway and are polled by the same north appliance. Changes to this receiver contract require review of both export paths, even though they have different service entry points.\\n\\nEvidence is reported by Operations (F-17 and F-18), not independently verified by repository tests. Code anchors identify affected code at the inspected baseline, not evidence of deployment. Reassess this constraint when Operations confirms migration or reports a changed site capability or gateway topology; update both dependent export decisions then.\",\n      \"path\": \"nodes/kn-north-receiver-contract.md\",\n      \"warning\": null,\n      \"relationship_path\": []\n    },\n    {\n      \"metadata\": {\n        \"schema_version\": 1,\n        \"id\": \"kn-normal-export-receiver-compatibility\",\n        \"title\": \"Normal export must preserve north receiver compatibility\",\n        \"type\": \"decision\",\n        \"tags\": [\n          \"fulfillment\",\n          \"receiver-compatibility\"\n        ],\n        \"weight\": 0.6,\n        \"status\": \"active\",\n        \"scope\": {\n          \"repositories\": [\n            \"fulfillment\"\n          ],\n          \"conditions\": [\n            \"Changing normal fulfillment delivery or its format selection\"\n          ]\n        },\n        \"evidence_state\": \"reported\",\n        \"anchors\": [\n          {\n            \"repo\": \"fulfillment\",\n            \"path\": \"exporter.py\",\n            \"role\": \"affected_code\",\n            \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n          }\n        ],\n        \"relations\": [\n          {\n            \"type\": \"constrained_by\",\n            \"target\": \"kn-north-receiver-contract\"\n          }\n        ],\n        \"sources\": [\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations handoff F-17\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations incident F-18\"\n          },\n          {\n            \"kind\": \"human\",\n            \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n          }\n        ],\n        \"verification\": {}\n      },\n      \"body\": \"For normal fulfillment delivery, preserve north's current compatible routing under the linked receiver contract. Do not make a service-wide format/default change that sends an unsupported encoding to north merely because the encoder supports it or other sites accept it.\\n\\nOperations F-17 supplies the deployment rule; F-18 explicitly makes normal and recovery exports subject to the same receiver obligation. When changing normal-export format selection, inspect recovery export as well and coordinate any receiver migration with Operations. The linked constraint owns site capabilities and the migration gate, rather than duplicating them here.\\n\\nThis decision applies the reported Operations contract to the normal delivery entry point. The repository's explicit-format tests establish encoder behavior only, not deployed routing or receiver readiness. The streaming change to write_batch preserves format selection and does not establish a migration. Revisit this decision if the shared receiver contract or the normal delivery destination changes.\",\n      \"path\": \"nodes/kn-normal-export-receiver-compatibility.md\",\n      \"warning\": null,\n      \"relationship_path\": [\n        {\n          \"source\": \"kn-normal-export-receiver-compatibility\",\n          \"target\": \"kn-north-receiver-contract\",\n          \"type\": \"constrained_by\",\n          \"direction\": \"in\"\n        }\n      ]\n    }\n  ],\n  \"truncated\": true,\n  \"truncation_reasons\": [\n    \"token_budget\"\n  ],\n  \"estimated_tokens\": 4757,\n  \"token_estimator\": \"conservative UTF-8 bytes of returned node records\"\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        },
+        {
+          "event_index": 19,
+          "id": "item_9",
+          "type": "command_execution",
+          "command": "/bin/bash -lc 'python -m knowledge_agent --config /workspace/config.json read kn-recovery-export-receiver-compatibility --revision 5cb2812298e18a1386504a6f9a6771f3a6d9bf66'",
+          "aggregated_output": "{\n  \"revision\": \"5cb2812298e18a1386504a6f9a6771f3a6d9bf66\",\n  \"requested_id\": \"kn-recovery-export-receiver-compatibility\",\n  \"resolved_id\": \"kn-recovery-export-receiver-compatibility\",\n  \"metadata\": {\n    \"schema_version\": 1,\n    \"id\": \"kn-recovery-export-receiver-compatibility\",\n    \"title\": \"Recovery replacements share the normal delivery receiver contract\",\n    \"type\": \"decision\",\n    \"tags\": [\n      \"fulfillment\",\n      \"receiver-compatibility\"\n    ],\n    \"weight\": 0.6,\n    \"status\": \"active\",\n    \"scope\": {\n      \"repositories\": [\n        \"fulfillment\"\n      ],\n      \"conditions\": [\n        \"Changing disaster-recovery replacement export or receiver format contract\"\n      ]\n    },\n    \"evidence_state\": \"reported\",\n    \"anchors\": [\n      {\n        \"repo\": \"fulfillment\",\n        \"path\": \"recovery.py\",\n        \"role\": \"affected_code\",\n        \"verified_commit\": \"2b106e9aaab9366f61035161cd1a16be9f9a104d\"\n      }\n    ],\n    \"relations\": [\n      {\n        \"type\": \"constrained_by\",\n        \"target\": \"kn-north-receiver-contract\"\n      }\n    ],\n    \"sources\": [\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations handoff F-17\"\n      },\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations incident F-18\"\n      },\n      {\n        \"kind\": \"human\",\n        \"reference\": \"Supplied Operations evidence qualification: deployment facts are reported, not established by repository tests\"\n      }\n    ],\n    \"verification\": {}\n  },\n  \"body\": \"Disaster-recovery replacements are another delivery to the same north receiver, not a separate compatibility domain. Apply the linked receiver contract to recovery format selection, including when changing recovery independently of normal exports. Review both paths whenever the receiver contract changes.\\n\\nWhile preserving compatible output, recovery must continue reconstructing the latest shipment image with latest-upsert/delete semantics. A format migration must not replace that reconstruction with an export of raw historical events or otherwise resurrect deleted shipments. This is a required behavior from F-18; the implementation of replay_events itself does not warrant a separate knowledge node.\\n\\nThe cross-path receiver obligation is reported in Operations incident F-18 and grounded in F-17's deployment constraint. Local tests exercise latest upsert and deletion and explicit encoding, but cannot verify that the deployed appliance polls both paths or has migrated. Code anchors locate the affected recovery entry point only.\\n\\nReassess compatibility when Operations changes the receiver contract or reports a different recovery destination. Changes to reconstruction semantics require a separate explicit requirement; receiver migration alone does not invalidate latest-upsert/delete behavior.\",\n  \"path\": \"nodes/kn-recovery-export-receiver-compatibility.md\",\n  \"warning\": null\n}\n",
+          "exit_code": 0,
+          "status": "completed"
+        }
+      ],
+      "implementation_diffs": {
+        "exporter.py": "--- before/exporter.py\n+++ after/exporter.py\n@@ -1,6 +1,9 @@\n from wire_formats import encode\n \n \n-def write_batch(site, records, stream, format_name=\"csv-v1\"):\n-    \"\"\"Write a site's fulfillment batch. An explicit format overrides the default.\"\"\"\n-    encode(list(records), stream, format_name)\n+def write_batch(site, records, stream, format_name=None):\n+    \"\"\"Write iterable records, defaulting to JSONL v2 except for north's CSV v1.\"\"\"\n+    if format_name is None:\n+        # Operations F-17: retain CSV until north's receiver migration is confirmed.\n+        format_name = \"csv-v1\" if site == \"north\" else \"jsonl-v2\"\n+    encode(records, stream, format_name)\n",
+        "inventory.py": "",
+        "recovery.py": "",
+        "test_public.py": "",
+        "wire_formats.py": ""
+      },
+      "knowledge_unchanged": true,
+      "proposal_branches": [],
+      "trace_sha256": "4968485611af768e7949072364634c4c183b8e62f90e85655d3dd152d5721c92",
+      "native_usage": {
+        "input_tokens": 189300,
+        "cached_input_tokens": 161280,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2235,
+        "reasoning_output_tokens": 68
+      },
+      "final_response": "Updated `write_batch` to default to JSONL v2, retaining CSV v1 for `north`. Explicit overrides and iterable inputs remain supported.\n\nUsed `kn-north-receiver-contract` and linked export decisions at revision `5cb2812`: Operations reports North still requires CSV. Recovery remains compatible, with reconstruction covered by regression tests.\n\nAll 8 tests passed; `git diff --check` passed.",
+      "review": {
+        "reviewer": "Parent Codex evaluator, not blind human review",
+        "passes": true,
+        "skill_read_event": 6,
+        "retrieval_events": [
+          15,
+          17,
+          19
+        ],
+        "first_edit_event": 22,
+        "evidence": "Loaded the dedicated retrieval skill and searched for write_batch deployment exceptions. Search returned all three accepted nodes; graph context exposed the contract and normal decision but was truncated, then agent read the recovery decision directly. Event 20 states the reported north exception before event 22 edits. Actual exporter preserves north CSV and explicit overrides, with JSONL elsewhere; recovery remains unchanged. Independent private consumer grader passed. No capture/proposal commands in native trace.",
+        "limitation": "One small synthetic task with configured skill awareness, not a general compliance guarantee or isolated graph-benefit measurement."
+      }
+    },
+    {
+      "task": "inventory",
+      "directory": ".demo\\retrieval-skill-split-20260925\\inventory",
+      "status": "passed",
+      "request": {
+        "task": "Fix inventory.summarize so repeated SKUs have their quantities summed. Support a one-pass iterable and empty input. Keep export and recovery behavior unchanged. Run relevant tests.",
+        "project": "/workspace/project",
+        "model": "gpt-6-astra",
+        "max_output_tokens": 8000
+      },
+      "private": {
+        "task": "inventory",
+        "knowledge_base": "56b662b1ee97aef1fbdc9d5fbb725b93e53da9ae",
+        "source_revision": "382f370abb14042ede4539f53e31619abb508eac",
+        "starting_files": {
+          "AGENTS.md": "bda34a8e1f7afb15fac0c07afb6a8ce6f8fbdf882e1d819fc462cd40d978e11a",
+          "exporter.py": "efdc756902f40ce91d271d2bcb6ed12e0ada8f74dbc60c3ae9a49e0bfb00751e",
+          "inventory.py": "9a2ce7a040fe8654e8714b084153d210b37da9f2e1b30e83609804b533b50e91",
+          "README.md": "22d2af84562d4b6642fa2b5a22183e09d31bd107c3270acecc1f5640e701bf71",
+          "recovery.py": "94ba3b5fb1b8d232eec4e6f7093f2a404bf86cda132f7abd6662b4323ca57cac",
+          "test_public.py": "24fc5ed4802cd8ed94f955728f8f6a145438d810fe5d3873f98e3d111e7e9fb4",
+          "wire_formats.py": "369a5a14e12cad42126a5160c57a14a916dc94414367a360b7ef29a37e3a93bb"
+        },
+        "policy_sha256": "ff775eb14ccc6930bf4d9009381890369c3936facdc4849563793024c868eb9f"
+      },
+      "execution": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 36.187000000005355,
+        "isolation": "docker-scoped-mounts",
+        "network": "bridge",
+        "status": "completed"
+      },
+      "coding_grade": {
+        "image_id": "sha256:6728f3c183264eb0aff9bd202c46bcc418e3d0e75a2467dc40f2a006e29d0091",
+        "exit_code": 0,
+        "wall_seconds": 0.46799999999348074,
+        "isolation": "docker-scoped-mounts",
+        "network": "none",
+        "status": "completed"
+      },
+      "grader_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.001s\n\nOK\n",
+      "infrastructure_error": null,
+      "knowledge_cli_commands": [],
+      "implementation_diffs": {
+        "exporter.py": "",
+        "inventory.py": "--- before/inventory.py\n+++ after/inventory.py\n@@ -2,5 +2,6 @@\n     \"\"\"Return quantity totals by SKU.\"\"\"\n     totals = {}\n     for record in records:\n-        totals[record[\"sku\"]] = record[\"quantity\"]\n+        sku = record[\"sku\"]\n+        totals[sku] = totals.get(sku, 0) + record[\"quantity\"]\n     return totals\n",
+        "recovery.py": "",
+        "test_public.py": "",
+        "wire_formats.py": ""
+      },
+      "knowledge_unchanged": true,
+      "proposal_branches": [],
+      "trace_sha256": "dfb9be03bafa475a52ed37a610143597c44d7ebc4d1972df39b2089ab7fed567",
+      "native_usage": {
+        "input_tokens": 60884,
+        "cached_input_tokens": 54144,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 669,
+        "reasoning_output_tokens": 11
+      },
+      "final_response": "Fixed [inventory.summarize](/workspace/project/inventory.py) to sum quantities for repeated SKUs in one pass and return `{}` for empty input.\n\nAdded regression tests. All 5 tests passed with `python -m unittest discover -v`, including existing export and recovery tests. Export and recovery code remained unchanged.\n\nThis self-contained fix required no external project knowledge.",
+      "review": {
+        "reviewer": "Parent Codex evaluator, not blind human review",
+        "passes": true,
+        "retrieval_events": [],
+        "first_edit_event": 10,
+        "evidence": "Agent inspected the standing policy and code, fixed inventory summation and added regression tests. No knowledge CLI commands or capture/proposal activity. The unrelated code-only task passed its private grader without changing export/recovery.",
+        "limitation": "This is appropriate retrieval restraint, not execution coverage of the dedicated skill."
+      }
+    }
+  ],
+  "note": "Interpret native commands and actual code changes together. Consumer success alone does not prove knowledge use; no-retrieval may be correct on the inventory control.",
+  "qualification": "The recovery query follows an illustrative example in the skill. No selected nodes, IDs or queries were supplied in task requests; the experiment criteria about query absence should be read at that request boundary. This validates separated workflow behavior, not unaided query formulation."
+}

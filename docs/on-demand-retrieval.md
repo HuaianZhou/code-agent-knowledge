@@ -38,8 +38,10 @@ with the earlier injected 6,000-byte contexts. It cannot isolate the extra benef
 of graph expansion over semantic retrieval.
 
 For a real project, append the policy fragment to existing `AGENTS.md`, replacing
-its config/skill/repository-map placeholders as described in
-[task-end capture](task-end-capture.md). If combining retrieval and capture, replace
+its config/repository-map placeholders as described in
+[task-end capture](task-end-capture.md). Set `SKILL_PATH` to the installed
+`skills/knowledge-retrieve/SKILL.md`, not the capture skill. Retrieval has its own
+steps 1-6 and ends with findings, without manifests or proposals. If combining retrieval and capture, replace
 the retrieval fragment's final retrieval-only restriction with the task-end policy's
 local-proposal authorization. Do not retain conflicting instructions. No global
 configuration is changed by these evaluation commands.
@@ -48,3 +50,30 @@ configuration is changed by these evaluation commands.
 
 The [2026-09-25 workflow report](results/agent-workflows-20260925.md) records
 completed Astra runs, native evidence, independent grades and limitations.
+
+The original pilot above used the earlier combined capture/retrieval skill. New
+preparations use the dedicated retrieval skill; historical results are unchanged.
+
+## Updating an existing integration
+
+Install/copy the new `skills/knowledge-retrieve` folder alongside the updated
+`knowledge-extract` folder in your agent's skill directory. Change retrieval-only
+AGENTS.md instructions from the old extraction skill path to the retrieval skill
+path and remove instructions to jump to capture step 3. Keep task-end capture
+instructions pointing to knowledge-extract. Start a fresh agent session so it
+loads the updated instructions. This repository change does not modify global
+skills or project AGENTS.md files automatically.
+
+The separate flows are:
+
+- Retrieval: open store → frame task/topic → find entry nodes → read/expand →
+  assess applicability → return findings and stop.
+- Capture: open store → screen conversation candidates → compare existing nodes →
+  choose operation → prepare manifest → propose → route for review → report.
+
+Capture still searches for duplicates; those searches do not turn it into a
+retrieval-only workflow. A later capture invocation is separate from retrieval.
+
+The [dedicated-skill validation](results/retrieval-skill-split-20260926.md) reran
+three fresh Astra tasks after this split: both export tasks retrieved through the
+new skill, inventory skipped retrieval, and all knowledge stores stayed unchanged.

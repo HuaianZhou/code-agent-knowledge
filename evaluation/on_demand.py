@@ -15,7 +15,7 @@ def prepare(output, source):
     source_revision, corpus, _ = snapshot(source, "main")
     template = ROOT / "integrations/codex/retrieval.fragment.md"
     policy = template.read_text(encoding="utf-8").replace("{{CLI_COMMAND}}", "python -m knowledge_agent --config /workspace/config.json").replace(
-        "{{SKILL_PATH}}", "/input/skills/knowledge-extract/SKILL.md").replace("{{REPOSITORIES_PATH}}", "/input/repositories.json")
+        "{{SKILL_PATH}}", "/input/skills/knowledge-retrieve/SKILL.md").replace("{{REPOSITORIES_PATH}}", "/input/repositories.json")
     trials = []
     for task, prompt in TASKS.items():
         trial = root / task
@@ -24,7 +24,7 @@ def prepare(output, source):
         (project / "AGENTS.md").write_text(policy, encoding="utf-8")
         init_repo(project, {})
         knowledge_base = init_repo(trial / "workspace/knowledge", corpus)
-        shutil.copytree(ROOT / "skills/knowledge-extract", trial / "input/skills/knowledge-extract")
+        shutil.copytree(ROOT / "skills/knowledge-retrieve", trial / "input/skills/knowledge-retrieve")
         shutil.copytree(ROOT / "knowledge_agent", trial / "input/tool-source/knowledge_agent", ignore=shutil.ignore_patterns("__pycache__"))
         (trial / "input/applicable-skills").mkdir()
         dump(trial / "input/repositories.json", {"fulfillment": "/workspace/project"})
@@ -40,7 +40,7 @@ def prepare(output, source):
     random.Random(42).shuffle(trials)
     dump(root / "experiment.json", {"run_order": trials, "model": MODEL, "source_revision": source_revision,
         "source_hashes": {str(p.relative_to(ROOT)).replace("\\", "/"): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in (Path(__file__), template, ROOT / "evaluation/fulfillment_grader.py")},
+            for p in (Path(__file__), template, ROOT / "skills/knowledge-retrieve/SKILL.md", ROOT / "evaluation/fulfillment_grader.py")},
         "criteria": "Review native trace for agent-chosen queries, relevant evidence before implementation, and appropriate restraint on inventory. Separate consumer grades assess code. No fixed node IDs or queries supplied to actor.",
         "limitation": "Three synthetic sessions with standing retrieval policy; not unaided discovery, no end-to-end retrieval token cap, not an equal-cost comparison to injected contexts."})
     return str(root)

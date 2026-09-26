@@ -2,7 +2,7 @@
 
 Project-specific decisions, constraints and their evidence may be available through
 `{{CLI_COMMAND}}`. Repository identities are mapped in `{{REPOSITORIES_PATH}}`.
-Use the task-start retrieval route in `{{SKILL_PATH}}` when the task depends on
+Use the knowledge-retrieve workflow in `{{SKILL_PATH}}` when the task depends on
 operational, historical or cross-component constraints that code alone may not
 establish. Consult relevant knowledge before committing to such a design.
 

@@ -24,10 +24,14 @@ class OnDemandPreparation(unittest.TestCase):
                 self.assertFalse((trial / "input/knowledge.json").exists())
                 self.assertFalse((trial / "input/check.py").exists())
                 self.assertTrue((trial / "workspace/knowledge/nodes").is_dir())
+                skill = trial / "input/skills/knowledge-retrieve/SKILL.md"
+                self.assertTrue(skill.is_file())
+                self.assertFalse((trial / "input/skills/knowledge-extract").exists())
                 policy = (trial / "workspace/project/AGENTS.md").read_text()
                 self.assertIn("Choose queries from the task", policy)
                 self.assertNotIn("{{", policy)
                 self.assertNotIn("kn-", policy)
+                self.assertIn("/input/skills/knowledge-retrieve/SKILL.md", policy)
 
 
 if __name__ == "__main__":

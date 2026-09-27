@@ -1,0 +1,253 @@
+{
+  "kind": "historical_task_pair_admission_audit",
+  "date": "2026-09-27",
+  "upstream": "https://github.com/basicmachines-co/basic-memory",
+  "clone_head": "22d31e96e2defa465d3703620a537c9125e7d364",
+  "selected": null,
+  "agent_trials_started": 0,
+  "cases": [
+    {
+      "id": "gateway_to_webdav",
+      "earlier_fix": "44e6a991fdb02c53515321f68134f1ebf0e5a7b8",
+      "later_fix": "b04d1b6d8590ed23f5838ee2d2ca2a8c3358c209",
+      "expected_claim": "The Basic Memory gateway reportedly rejects rate-limited requests before processing; replayable writes may be retried on that rejection, without generalizing to unknown transport failures.",
+      "later_relevance": "Bounded per-request retries across WebDAV enumeration, downloads and uploads; distinguish replayable requests and preserve conditional-write behavior.",
+      "decision": "reject_as_primary_positive_capture_case",
+      "reason": "The earlier fix records the central external contract directly in the shared retry helper. It is readily recoverable at the later baseline. MCP timing policy must not be blindly imposed on WebDAV.",
+      "pattern": "pre.processing|before application processing|Retry-After|rate.limit",
+      "earlier_base": "f6106874911e1ee21fc5f4a0652f7867aca301bf",
+      "later_base": "3452c821d76c083823d020984d71e06904a1ff1e",
+      "counterevidence": [
+        {
+          "path": "src/basic_memory/mcp/tools/utils.py",
+          "line": 296,
+          "needle": "before application processing",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/3452c821d76c083823d020984d71e06904a1ff1e/src/basic_memory/mcp/tools/utils.py#L296"
+        }
+      ],
+      "searches": [
+        {
+          "stage": "earlier_base",
+          "revision": "f6106874911e1ee21fc5f4a0652f7867aca301bf",
+          "pattern": "pre.processing|before application processing|Retry-After|rate.limit",
+          "match_lines": 32,
+          "output_sha256": "49904a4c41d7ea21d8c676a60f9187c8b075bec7a0a1ac9d5de381b0e7c4438b"
+        },
+        {
+          "stage": "earlier_fix",
+          "revision": "44e6a991fdb02c53515321f68134f1ebf0e5a7b8",
+          "pattern": "pre.processing|before application processing|Retry-After|rate.limit",
+          "match_lines": 96,
+          "output_sha256": "40187acd42db18e6646c63ea67e985424c291f94b770a21f769cc1739c5d0dfc"
+        },
+        {
+          "stage": "later_base",
+          "revision": "3452c821d76c083823d020984d71e06904a1ff1e",
+          "pattern": "pre.processing|before application processing|Retry-After|rate.limit",
+          "match_lines": 96,
+          "output_sha256": "648e098ff72e6db43419605fe74de0eb5f524445af564251170991e0ced441e9"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/issues/1378",
+          "title": "MCP client should honor Retry-After and retry on 429 instead of failing the tool call",
+          "created_at": "2026-08-29T21:10:10Z",
+          "updated_at": "2026-09-08T13:02:37Z",
+          "comment_count": 2,
+          "cached_body_sha256": "8471c11d4bfdbf47c1f3acb67a2a8a933368b45b40236bf1f0cb05a6a2fa859f",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/issues/1378#issuecomment-5464904634",
+            "https://github.com/basicmachines-co/basic-memory/issues/1378#issuecomment-5577717913"
+          ],
+          "cached_comments_sha256": "ccd3b32060cffa68f05d9b00632dc85a765c7b20a4df4a24e9c21cda36911de0"
+        },
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/pull/1532",
+          "title": "fix(cli): wait out rate limits during a WebDAV transfer",
+          "created_at": "2026-09-10T16:31:59Z",
+          "updated_at": "2026-09-10T18:21:07Z",
+          "comment_count": 1,
+          "cached_body_sha256": "c2e2fb3b4d01902f5dcce374693dcb6760c84d90ff67421e5eabbf07b9ae251b",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/pull/1532#issuecomment-5622050863"
+          ],
+          "cached_comments_sha256": "d3b8da859eb0d253edb1dcf7b830c0a1b5471ed28073765b6212f470386dcc60"
+        }
+      ]
+    },
+    {
+      "id": "team_transfer_to_routing",
+      "earlier_fix": "92f9ee6768417cb9549f9ea658ec23cec65c3700",
+      "later_fix": "51992cc166f0f8dae887f50d66bcc29fb89d2898",
+      "expected_claim": "Tenant-wide storage credentials cannot enforce Team project-level authorization; Team transfers require the authorized WebDAV service and dependent server capabilities.",
+      "later_relevance": "Investigate Team transfer 404s and select the correct cloud client/base while preserving project authorization.",
+      "decision": "reject_as_primary_positive_capture_case",
+      "reason": "Transfer module already explains the RBAC rationale. Existing upload routing and its named test give the later fix. The earlier public discussion does not independently establish the later cloud-root diagnosis; importing it would leak the answer.",
+      "pattern": "tenant.scoped|whole bucket|control.plane|WebDAV|If-None-Match",
+      "earlier_base": "1bcde4d34f02a9ad31cd0e39e902ad8c1d200757",
+      "later_base": "f84ea7280226118052b09f9dc184ece94b10ce46",
+      "counterevidence": [
+        {
+          "path": "src/basic_memory/cli/commands/cloud/webdav_transfer.py",
+          "line": 5,
+          "needle": "whole bucket",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/f84ea7280226118052b09f9dc184ece94b10ce46/src/basic_memory/cli/commands/cloud/webdav_transfer.py#L5"
+        },
+        {
+          "path": "src/basic_memory/cli/commands/cloud/upload_command.py",
+          "line": 19,
+          "needle": "get_cloud_control_plane_client",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/f84ea7280226118052b09f9dc184ece94b10ce46/src/basic_memory/cli/commands/cloud/upload_command.py#L19"
+        },
+        {
+          "path": "tests/cli/cloud/test_upload_command_routing.py",
+          "line": 15,
+          "needle": "test_cloud_upload_uses_control_plane_client",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/f84ea7280226118052b09f9dc184ece94b10ce46/tests/cli/cloud/test_upload_command_routing.py#L15"
+        }
+      ],
+      "searches": [
+        {
+          "stage": "earlier_base",
+          "revision": "1bcde4d34f02a9ad31cd0e39e902ad8c1d200757",
+          "pattern": "tenant.scoped|whole bucket|control.plane|WebDAV|If-None-Match",
+          "match_lines": 80,
+          "output_sha256": "5adee65f962a97f5e5e5739905c2607330fe4f4ccd23c8bc6fadddbe6ce254d6"
+        },
+        {
+          "stage": "earlier_fix",
+          "revision": "92f9ee6768417cb9549f9ea658ec23cec65c3700",
+          "pattern": "tenant.scoped|whole bucket|control.plane|WebDAV|If-None-Match",
+          "match_lines": 283,
+          "output_sha256": "168122f04604bd70ebb4af841a08e2754a6c32d3c0b1b5a780673bd33900e908"
+        },
+        {
+          "stage": "later_base",
+          "revision": "f84ea7280226118052b09f9dc184ece94b10ce46",
+          "pattern": "tenant.scoped|whole bucket|control.plane|WebDAV|If-None-Match",
+          "match_lines": 283,
+          "output_sha256": "d556c098b7972360306b82702074099d3c6e8da0c10af6d868bd3b3793757f9d"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/pull/1263",
+          "title": "fix(cli): run Team push/pull over WebDAV instead of storage credentials",
+          "created_at": "2026-08-15T21:15:39Z",
+          "updated_at": "2026-08-21T03:48:43Z",
+          "comment_count": 4,
+          "cached_body_sha256": "7f25b1ccbbd90d1ab4456f42d91256255e21f4304231ac380d54d7e97dbe14e1",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/pull/1263#issuecomment-5322216770",
+            "https://github.com/basicmachines-co/basic-memory/pull/1263#issuecomment-5322274918",
+            "https://github.com/basicmachines-co/basic-memory/pull/1263#issuecomment-5322301385",
+            "https://github.com/basicmachines-co/basic-memory/pull/1263#issuecomment-5350661690"
+          ],
+          "cached_comments_sha256": "d93ce2ee6fddb95426886c8c8fbc57170b29ab4c183651e1c5dbd85164fbc019"
+        },
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/pull/1310",
+          "title": "fix(cli): route Team WebDAV transfers to the control-plane base",
+          "created_at": "2026-08-24T01:00:52Z",
+          "updated_at": "2026-08-24T02:05:59Z",
+          "comment_count": 2,
+          "cached_body_sha256": "678bb711ad79561cc562b63dae88dcab09cdd392d302126bdfbb3b77c3a5545b",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/pull/1310#issuecomment-5389857401",
+            "https://github.com/basicmachines-co/basic-memory/pull/1310#issuecomment-5389879385"
+          ],
+          "cached_comments_sha256": "0b0dd91a02efa27b165f6822c6e8e006692beae04d308917724c415cbcd566e5"
+        }
+      ]
+    },
+    {
+      "id": "embedding_memory_to_reranker",
+      "earlier_fix": "8acdb49a41ef7c36c5f301bc5e7eecb46b2609f7",
+      "later_fix": "fa306622d3f98836720d5b08a090d4684cb0f180",
+      "expected_claim": "Reported native memory growth under long-lived multi-project load warrants provider-reuse and ONNX-arena investigation. Cache-key drift was a hypothesis, not a confirmed incident cause.",
+      "later_relevance": "Investigate retained memory in the local cross-encoder path while preserving candidate scores/order and considering latency.",
+      "decision": "reject_as_primary_positive_capture_case",
+      "reason": "Embedding provider comments and regression tests already record the arena mitigation and link the incident at the later baseline. The original causal hypothesis remains uncertain, and a small mock test cannot establish real native-memory savings.",
+      "pattern": "cpu.mem.arena|native.memory|cache.key|process.wide|affinity",
+      "earlier_base": "f7304bf55369fbed3596cf6ccb9162e176d180c6",
+      "later_base": "ba81f807ad0a7799f10c8e8022cd5622cf8f3034",
+      "counterevidence": [
+        {
+          "path": "src/basic_memory/repository/fastembed_provider.py",
+          "line": 92,
+          "needle": "enable_cpu_mem_arena",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/ba81f807ad0a7799f10c8e8022cd5622cf8f3034/src/basic_memory/repository/fastembed_provider.py#L92"
+        },
+        {
+          "path": "tests/repository/test_fastembed_provider.py",
+          "line": 138,
+          "needle": "test_fastembed_provider_disables_cpu_mem_arena_by_default",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/ba81f807ad0a7799f10c8e8022cd5622cf8f3034/tests/repository/test_fastembed_provider.py#L138"
+        },
+        {
+          "path": "src/basic_memory/repository/embedding_provider_factory.py",
+          "line": 228,
+          "needle": "single process-wide singleton",
+          "url": "https://github.com/basicmachines-co/basic-memory/blob/ba81f807ad0a7799f10c8e8022cd5622cf8f3034/src/basic_memory/repository/embedding_provider_factory.py#L228"
+        }
+      ],
+      "searches": [
+        {
+          "stage": "earlier_base",
+          "revision": "f7304bf55369fbed3596cf6ccb9162e176d180c6",
+          "pattern": "cpu.mem.arena|native.memory|cache.key|process.wide|affinity",
+          "match_lines": 16,
+          "output_sha256": "0696aec6a289906aaac142f6418409720425f14cd3d5f911db6a1603b626fe37"
+        },
+        {
+          "stage": "earlier_fix",
+          "revision": "8acdb49a41ef7c36c5f301bc5e7eecb46b2609f7",
+          "pattern": "cpu.mem.arena|native.memory|cache.key|process.wide|affinity",
+          "match_lines": 37,
+          "output_sha256": "aedc9bd00eef94c1e1bd2f860ca51fe704b17cad906c2447fa59c600bec80e49"
+        },
+        {
+          "stage": "later_base",
+          "revision": "ba81f807ad0a7799f10c8e8022cd5622cf8f3034",
+          "pattern": "cpu.mem.arena|native.memory|cache.key|process.wide|affinity",
+          "match_lines": 143,
+          "output_sha256": "fa530f1cfb69aa969b0fcb52bf060349f4312aa59ab5aa3c850b7b939658de14"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/issues/872",
+          "title": "FastEmbed/ONNX embedding model is loaded multiple times per process, leaking ~25 GB of native memory",
+          "created_at": "2026-05-30T15:53:49Z",
+          "updated_at": "2026-06-09T22:02:22Z",
+          "comment_count": 2,
+          "cached_body_sha256": "e742845c81139abadfd414f644f5109ccebc549bd04ab8a1d96634c561264e9b",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/issues/872#issuecomment-4583360016",
+            "https://github.com/basicmachines-co/basic-memory/issues/872#issuecomment-4643663778"
+          ],
+          "cached_comments_sha256": "ebe7c7455f5cc255d25ae6c29c707860543bec882940cea4e2f4eea321a502b9"
+        },
+        {
+          "url": "https://github.com/basicmachines-co/basic-memory/pull/1555",
+          "title": "perf(core): bound reranker batches and disable ONNX CPU arena",
+          "created_at": "2026-09-15T01:13:51Z",
+          "updated_at": "2026-09-15T02:09:03Z",
+          "comment_count": 1,
+          "cached_body_sha256": "670db59d4a848ded5e8d539cd1d9ecb018ce7ea77802569a28d6dc5e46f73401",
+          "comment_urls": [
+            "https://github.com/basicmachines-co/basic-memory/pull/1555#issuecomment-5673165456"
+          ],
+          "cached_comments_sha256": "f54087c280b2dcca6e810a29d5a46eb5c400eff65431fd3d5c8521787646265a"
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Targeted source audit, not proof that no suitable Basic Memory pair exists",
+    "Discussion bodies are current public versions, not immutable historical snapshots; creation dates alone do not establish content availability",
+    "Reported server/runtime behavior is attributed to the source, not independently verified",
+    "Rejections concern primary positive capture testing; these pairs may still measure navigation or investigation cost"
+  ]
+}

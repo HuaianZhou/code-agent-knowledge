@@ -1,5 +1,10 @@
 # Basic Memory historical pilot
 
+After the initial zero-write result, a
+[three-pair historical audit](results/basic-memory-task-pair-audit-20260927.md)
+rejected three further candidates as primary positive capture cases. No additional
+agent runs were started; the audit records the source evidence and selection gaps.
+
 This pilot evaluates an ordinary coding task with the installed standing capture
 policy. The task request does not name capture, the skill, or the knowledge CLI.
 The original Basic Memory AGENTS.md and project skills remain available. Our policy

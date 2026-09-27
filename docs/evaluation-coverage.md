@@ -29,7 +29,7 @@ Test names refer to `tests/test_knowledge_agent.py` unless stated otherwise.
 
 | Generic connections and legacy compatibility | `test_generic_connections_review_both_directions_without_mutation`, `test_legacy_links_remain_readable_and_connected` | Cycles terminate; review reaches connected nodes from either endpoint, excludes disconnected nodes and leaves accepted status unchanged |
 
-| Metadata/content/anchor route selection | `evaluation.retrieval_routes`; `tests/test_retrieval_routes.py` | Eight designed scenarios; mechanics/preparation tested, agent decisions and semantic ranking not yet evaluated |
+| Metadata/content/anchor route selection | `evaluation.retrieval_routes`; `tests/test_retrieval_routes.py` | Eight completed Astra cases reviewed; semantic calibration passed; all stores unchanged. Seven-node corpus does not establish large-store recall or graph benefit |
 
 Do not count prepared trials, a lexical diagnostic, a mocked adapter or a manually
 authored node as a completed real-agent or semantic-search evaluation. See

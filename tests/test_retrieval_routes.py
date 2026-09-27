@@ -5,6 +5,7 @@ import unittest
 
 from evaluation.harness import init_repo, container_command
 from evaluation.retrieval_routes import CASES, corpus, prepare
+from evaluation.retrieval_routes_report import report
 from knowledge_agent.gitstore import initialize
 from knowledge_agent.index import Embedder, Index
 
@@ -61,6 +62,13 @@ class RetrievalRoutes(unittest.TestCase):
             mounts = " ".join(container_command(trial, "test-image"))
             self.assertNotIn(str(trial / "private.json"), mounts)
             self.assertNotIn("source=" + str(trial) + ",", mounts)
+        # A successful actor exit or its own claim is not a semantic grade.
+        trial = root / "metadata_hit"
+        (trial / "run.json").write_text(json.dumps({"exit_code": 0}))
+        (trial / "output/result.json").write_text(json.dumps({"model": "gpt-6-astra", "success": True}))
+        self.assertEqual(report(root)["trials"][0]["status"], "needs_review")
+        (trial / "reviewer.json").write_text(json.dumps({"answer_supported": False, "no_writes": True}))
+        self.assertEqual(report(root)["trials"][0]["status"], "failed")
 
 
 if __name__ == "__main__":

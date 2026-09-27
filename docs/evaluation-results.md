@@ -119,3 +119,7 @@ retained separately. These results do not isolate graph benefit or prove reliabi
 ## Dedicated retrieval skill, 2026-09-26
 
 The [skill separation follow-up](results/retrieval-skill-split-20260926.md) completed three fresh Astra sessions. Both export tasks used knowledge-retrieve before editing; the inventory control skipped retrieval. All consumer grades passed, with no knowledge writes or capture/proposal calls. This tests the separate workflow, not guaranteed complex-task compliance.
+
+## Retrieval entry routes, 2026-09-27
+
+[Eight Astra cases](results/retrieval-routes-astra-20260927.md) passed parent-evaluator trace review: useful metadata, empty/weak metadata fallback, direct detailed-question search, anchors, unobvious titles, wrong-type broadening and absent evidence. Both code and knowledge remained unchanged. Semantic calibration put required targets in the top three. With only seven nodes, unfiltered searches returned the whole corpus; no large-store or comparative graph/policy benefit is established.

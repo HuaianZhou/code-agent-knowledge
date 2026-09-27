@@ -80,3 +80,23 @@ and updated skills in independent sessions, ideally with repeated runs. Compare
 answer support, missed obligations and cost. Retain failures and quota interruptions.
 Until those agent runs are completed, these are designed scenarios and tested
 facilities, not evidence that the new policy improves agent performance.
+
+## Calibration and evidence reports
+
+```text
+python -m evaluation.retrieval_routes_calibrate .demo/retrieval-routes-RUN
+python -m evaluation.retrieval_routes_report .demo/retrieval-routes-RUN --output REPORT.json
+```
+
+Calibration requires the installed, cached pinned semantic model and preserves an
+existing calibration file. The reporter retains pending/invalid executions and
+requires a separate reviewer.json before reporting answer success. Record the
+reviewer, answer_supported, no_writes, route, evidence event indexes, reasoning and
+limitations. A successful process or an agent's claimed success is not a grade.
+The reporter also checks both Git heads/status and proposal branches independently.
+
+## Completed run
+
+The [2026-09-27 Astra report](results/retrieval-routes-astra-20260927.md) records
+all eight completed cases, semantic calibration, trace review and unchanged stores.
+The seven-node size limits conclusions; unfiltered search returned the whole corpus.

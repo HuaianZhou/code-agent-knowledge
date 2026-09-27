@@ -158,3 +158,7 @@ New links use `type: related_nodes` inside the existing `relations` list. Contex
 ## Retrieval entry-route policy and evaluation design, 2026-09-27
 
 Updated knowledge-retrieve for optional exact metadata entry, direct content search for detailed queries, anchor entry, and broadening when filtered results are empty or insufficient. Four tests passed with `python -m unittest tests.test_retrieval_routes tests.test_on_demand -v`; skill validation passed. Eight isolated semantic-configured trials were prepared in `.demo/retrieval-routes-20260927`. No agent or semantic-ranking run was performed for this new suite. The mechanical tests use lexical indexing and do not prove semantic recall or agent policy compliance. See the [evaluation protocol](retrieval-route-evaluation.md) for private criteria, calibration and actual agent-run instructions.
+
+## Retrieval route execution, 2026-09-27
+
+The previously prepared eight trials have now run with Astra and passed parent-Codex answer/trace review. No code or knowledge writes occurred; frozen source hashes matched. Semantic calibration completed with the real pinned model; seven answer-bearing cases had all targets in the top three. `python -m unittest tests.test_retrieval_routes -v`: three tests passed, including report safeguards against self-reported success and lost negative reviews. The calibration helper reproduced the saved results. See the [run report](results/retrieval-routes-astra-20260927.md) for detailed evidence and corpus-size limitations.

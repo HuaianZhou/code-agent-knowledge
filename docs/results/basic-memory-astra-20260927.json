@@ -1,0 +1,98 @@
+{
+  "kind": "basic_memory_standing_policy_pilot",
+  "experiment": {
+    "model": "gpt-6-astra",
+    "run_order": [
+      "investigation"
+    ],
+    "upstream_revision": "60408ad7d53e4ec448abaf04d0bfa222aa2f8e78",
+    "trigger": "standing_AGENTS_policy_without_task_reminder",
+    "status": "prepared_not_run",
+    "request_sha256": "4a6b0fff198880cda7e9af4932303622b757083cc0401fd84bdd367ef3e72c1f",
+    "limitations": [
+      "Single historical task; no reliability estimate",
+      "Standing policy, not description-only discovery",
+      "Public historical material may be familiar to the model",
+      "Reuse remains a separate experiment"
+    ]
+  },
+  "execution": {
+    "image_id": "sha256:a7111a799a8843f3177a27221bbb8497ee71d87bf1c9391639bfeb84ebd5f534",
+    "exit_code": 0,
+    "wall_seconds": 278.10899999999674,
+    "isolation": "docker-scoped-mounts",
+    "network": "bridge",
+    "status": "completed"
+  },
+  "held_out_grade": {
+    "image_id": "sha256:a7111a799a8843f3177a27221bbb8497ee71d87bf1c9391639bfeb84ebd5f534",
+    "exit_code": 0,
+    "wall_seconds": 14.76600000000326,
+    "isolation": "docker-scoped-mounts",
+    "network": "none",
+    "status": "completed"
+  },
+  "calibration": {
+    "calibration-before": {
+      "image_id": "sha256:a7111a799a8843f3177a27221bbb8497ee71d87bf1c9391639bfeb84ebd5f534",
+      "exit_code": 1,
+      "wall_seconds": 24.32799999997951,
+      "isolation": "docker-scoped-mounts",
+      "network": "none",
+      "status": "failed"
+    },
+    "calibration-reference": {
+      "image_id": "sha256:a7111a799a8843f3177a27221bbb8497ee71d87bf1c9391639bfeb84ebd5f534",
+      "exit_code": 0,
+      "wall_seconds": 26.82799999997951,
+      "isolation": "docker-scoped-mounts",
+      "network": "none",
+      "status": "completed"
+    }
+  },
+  "submission_evidence": [
+    {
+      "command": "/bin/bash -lc 'TASK_CAPTURE_DIR=$(mktemp -d /tmp/indexing-capture.XXXXXX)\nprintf '\"'%s\\\\n' '{\\\"nodes\\\": [], \\\"admission\\\": []}' > \\\"\"'$TASK_CAPTURE_DIR/manifest.json\"\n/usr/local/bin/python -m knowledge_agent --config /workspace/config.json task-end \"$TASK_CAPTURE_DIR/manifest.json\"\ntail -35 /tmp/indexing-doctor.log'",
+      "shell_exit_code": 0,
+      "result": {
+        "outcome": "zero_qualifying_candidates",
+        "writes": 0
+      }
+    }
+  ],
+  "knowledge": {
+    "accepted_main_unchanged": true,
+    "accepted_nodes": 0,
+    "proposal_branches": [],
+    "working_tree_status": ""
+  },
+  "independent_test_output": "........................................................................ [ 56%]\n.......................................................                  [100%]\n127 passed in 18.84s\n",
+  "native_usage": {
+    "input_tokens": 1671725,
+    "cached_input_tokens": 1580160,
+    "cache_write_input_tokens": 0,
+    "output_tokens": 5898,
+    "reasoning_output_tokens": 863
+  },
+  "trace_sha256": "d3e23484e5b5563113d4217f3b846c888ed9575f1c69c31d8e5da8a20e60d10e",
+  "request_sha256": "4a6b0fff198880cda7e9af4932303622b757083cc0401fd84bdd367ef3e72c1f",
+  "review": {
+    "reviewer": "Codex evaluator, not a blind human reviewer",
+    "trigger": "Observed skill read, semantic synchronize, and task-end without a task-specific reminder. Standing AGENTS.md explicitly directs task-end capture.",
+    "submission": "Actual CLI returned zero_qualifying_candidates and writes=0. Knowledge main unchanged, no proposal branches or working-tree edits.",
+    "admission": "Zero-write decision is reasonable for this task. Pre-existing docs/DOMAIN_MODEL.md lines 92-110 describe materialization state and asynchronous projection lag; lines 127-134 establish accepted Markdown operational authority. These are direct project guidance, not previously unknown deployment constraints.",
+    "caveat": "New regression tests alone would not justify rejecting all discovered rationale. This judgment depends on guidance already present before the task. It does not establish that every potentially useful claim was considered.",
+    "code": "Held-out upstream regression passed; independent final selected SQLite suite passed 127 tests. Patch is a missing-file fallback for pending/writing, not equivalent to the entire upstream implementation. Existing-file precedence and performance beyond tested scenarios are not validated by the held-out test.",
+    "limitations": [
+      "One trial; no capture reliability estimate",
+      "No nodes to assess organization or relationships",
+      "No reuse or graph-benefit comparison",
+      "Postgres and full suite not run",
+      "Actor reported full typecheck blocked by missing optional pymilvus imports; not independently established as a clean full check",
+      "Public historical solution could be familiar to the model"
+    ],
+    "external_solution_access": "No external source-fetch commands observed in the native command trace; network was available for model access, so this is trace review rather than firewall enforcement."
+  },
+  "status": "reviewed_pilot",
+  "reuse": "not_run_empty_corpus"
+}

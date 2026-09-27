@@ -1,0 +1,6 @@
+# Build from the prepared directory, containing the historical pyproject/lock only.
+FROM knowledge-eval-codex:local
+RUN pip install --no-cache-dir uv==0.8.22
+COPY pyproject.toml uv.lock /opt/basic-memory-deps/
+ENV UV_PROJECT_ENVIRONMENT=/opt/basic-memory
+RUN cd /opt/basic-memory-deps && uv sync --frozen --no-install-project

@@ -1,5 +1,10 @@
 # Three-layer evaluation
 
+The [Basic Memory historical pilot](basic-memory-evaluation.md) exercises a real
+project with no task-specific capture reminder. Its
+[observed results](results/basic-memory-astra-20260927.md) distinguish successful
+workflow triggering from actual knowledge creation and reuse.
+
 Run these commands from the tool's source repository using its Python environment.
 `evaluation/` is evaluator tooling, not a production knowledge store or part of the
 installed CLI package. Put outputs under `.demo/` (Git-ignored). Never publish raw
